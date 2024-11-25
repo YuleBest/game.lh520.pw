@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>请查看文档</title>
+<style>
+    body, html {
+        height: 100%; /* 设置body和html的高度为100%，以便使用Flexbox居中 */
+        margin: 0; /* 移除默认的边距 */
+        display: flex; /* 使用Flexbox布局 */
+        align-items: center; /* 垂直居中 */
+        justify-content: center; /* 水平居中 */
+        text-align: center; /* 文本居中对齐 */
+        font-family: Arial, sans-serif; /* 字体设置 */
+    }
+
+    .container {
+        text-align: center; /* 文本居中对齐 */
+    }
+
+    .rectangle {
+        display: inline-block; /* 使容器根据内容自适应 */
+        padding: 10px; /* 内边距，使文字与边框之间有空间 */
+        border: 1px solid #ccc; /* 边框 */
+        cursor: pointer; /* 鼠标指针变为手形，表示可点击 */
+    }
+
+    .additional-text {
+        margin-top: 20px; /* 在矩形下方增加一些间距 */
+        cursor: pointer; /* 鼠标指针变为手形，表示可点击 */
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="rectangle" id="rectangleText">
+        <p>123pan</p>
+    </div>
+    <div class="additional-text" id="additionalText">
+        <p>提示：2024-11-15 21:44</p>
+    </div>
+</div>
+
+<script>
+    // 复制矩形中的文本
+    document.getElementById('rectangleText').addEventListener('click', function() {
+        const text = this.querySelector('p').innerText;
+        copyToClipboard(text);
+    });
+
+    // 复制额外文本
+    document.getElementById('additionalText').addEventListener('click', function() {
+        const text = this.querySelector('p').innerText;
+        copyToClipboard(text);
+    });
+
+    // 复制到剪贴板的函数
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('已复制到剪贴板: ' + text);
+        }).catch(err => {
+            console.error('复制失败: ', err);
+        });
+    }
+</script>
+
+</body>
+</html>
