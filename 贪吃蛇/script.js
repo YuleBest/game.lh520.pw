@@ -27,7 +27,7 @@ function getRandomPosition() {
 
 function initializeGame() {
     snake = [getRandomPosition()];
-    direction = { x: 10, y: 0 }; // 初始向右移动
+    direction = { x: 0, y: 0 }; // 初始不移动
     food = getRandomPosition();
     score = 0;
     time = 0;
@@ -76,7 +76,7 @@ function update() {
     // 检测碰撞
     if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) {
         alert(`游戏结束，你的分数是 ${score}`);
-        location.reload();
+        location.href = 'index.html'; // 重新加载页面
     }
 
     draw();
