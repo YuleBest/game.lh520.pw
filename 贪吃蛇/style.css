@@ -36,24 +36,10 @@ body {
     border: 1px solid black;
 }
 
-#controls {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px;
-}
-
-#controls > div {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-}
-
 button {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin: 0%;
+    padding: 0px 0px;
+    font-size: 0%;
 }
 
 /* 移动端样式 */
@@ -78,5 +64,22 @@ button {
     button {
         width: 100%;
         padding: 10px;
+        margin: 10px 0;
+        font-size: 16px;
     }
+
+    #controls {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+    }
+    
+    #controls > div {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+    
 }
