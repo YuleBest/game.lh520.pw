@@ -20,6 +20,7 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            margin: 5px;
         }
         #qrcode {
             margin-top: 20px;
@@ -27,34 +28,71 @@
     </style>
 </head>
 <body>
-
+    <!-- 页面标题 -->
     <h1>二维码生成器</h1>
-    <input type="text" id="text" placeholder="输入文本或URL">
+    <!-- 输入框，用于输入文本或URL -->
+    <input type="text" id="text" placeholder="输入文本或网页链接">
+    <!-- 生成二维码按钮，点击后调用generateQRCode函数 -->
     <button onclick="generateQRCode()">生成二维码</button>
-
+    <!-- 下载二维码按钮，初始状态为隐藏 -->
+    <button id="download" style="display: none;">下载二维码图像</button>
+    <!-- 二维码显示区域 -->
     <div id="qrcode"></div>
-
-    <!-- qrcode.js library -->
+    <!-- 引入qrcode.js库，用于生成二维码 -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-
     <script>
+        /**
+         * 生成二维码的函数
+         * 当用户点击“生成二维码”按钮时调用
+         */
         function generateQRCode() {
+            // 获取输入框中的文本
             const text = document.getElementById('text').value;
+            // 获取二维码显示区域的DOM元素
             const qrContainer = document.getElementById('qrcode');
-            
-            // 清除之前的二维码
+            // 获取下载按钮的DOM元素
+            const downloadBtn = document.getElementById('download');
+
+            // 清除之前的二维码并隐藏下载按钮
             qrContainer.innerHTML = '';
-            
+            downloadBtn.style.display = 'none';
+
+            // 如果输入框中的文本不为空
             if (text.trim()!== '') {
+                // 使用qrcode.js库的toCanvas方法生成二维码
                 QRCode.toCanvas(text, { width: 300 }, function (error, canvas) {
-                    if (error) console.error(error);
+                    // 如果生成二维码过程中发生错误
+                    if (error) {
+                        // 在控制台中输出错误信息
+                        console.error(error);
+                        // 终止函数执行
+                        return;
+                    }
+                    // 将生成的二维码canvas元素添加到页面中
                     qrContainer.appendChild(canvas);
+
+                    // 展示下载按钮
+                    downloadBtn.style.display = 'inline-block';
+                    
+                    // 为下载按钮绑定点击事件
+                    downloadBtn.onclick = function() {
+                        // 将canvas转换为图像数据URL
+                        const imgData = canvas.toDataURL('image/png');
+                        // 创建一个a标签用于下载
+                        const link = document.createElement('a');
+                        // 设置a标签的href属性为图像数据URL
+                        link.href = imgData;
+                        // 设置a标签的download属性为文件名
+                        link.download = 'qrcode.png';
+                        // 模拟点击a标签，触发下载
+                        link.click();
+                    };
                 });
             } else {
-                alert('请输入一些文本或URL！');
+                // 如果输入框中没有文本，弹出提示
+                alert('请先输入一些文本或一个网页链接再点击生成');
             }
         }
     </script>
-
 </body>
 </html>
