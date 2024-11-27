@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二维码生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #qrcode {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>二维码生成器</h1>
+    <input type="text" id="text" placeholder="输入文本或URL">
+    <button onclick="generateQRCode()">生成二维码</button>
+
+    <div id="qrcode"></div>
+
+    <!-- qrcode.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+    <script>
+        function generateQRCode() {
+            const text = document.getElementById('text').value;
+            const qrContainer = document.getElementById('qrcode');
+            
+            // 清除之前的二维码
+            qrContainer.innerHTML = '';
+            
+            if (text.trim()!== '') {
+                QRCode.toCanvas(text, { width: 300 }, function (error, canvas) {
+                    if (error) console.error(error);
+                    qrContainer.appendChild(canvas);
+                });
+            } else {
+                alert('请输入一些文本或URL！');
+            }
+        }
+    </script>
+
+</body>
+</html>
