@@ -16,7 +16,7 @@ let maxSpeed = 25; // 最大速度
 let intervalId;
 let lastTime = 0;
 
-alert(`游戏规则：不要让蛇撞到墙壁或自己的身体，得分越高速度越快，最高速度为 ${maxSpeed}ms/格。你可以使用按钮或键盘上的箭头键控制蛇的移动。`);
+alert(`Rules of the game: Don't let the snake hit the walls or your own body, the higher the score the faster the speed, the maximum speed is ${maxSpeed}ms/P. You can use the buttons or the arrow keys on the keyboard to control the movement of the snake.`);
 
 function getRandomPosition() {
     return {
@@ -75,7 +75,7 @@ function update() {
 
     // 检测碰撞
     if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) {
-        alert(`游戏结束，你的分数是 ${score}`);
+        alert(`Game over! Your score is ${score}`);
         location.href = location.href; // 刷新页面
     }
 
