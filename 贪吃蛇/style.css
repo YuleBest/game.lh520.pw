@@ -5,18 +5,20 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #f0f0f0;
+    overflow: hidden; /* 防止页面滑动 */
 }
 
 #game-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     width: 80%;
 }
 
 #game-area {
     text-align: center;
-    width: 50%;
+    width: 100%;
 }
 
 #start-game {
@@ -35,20 +37,46 @@ body {
 }
 
 #controls {
-    width: 150%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 10px;
 }
 
 #controls > div {
     display: flex;
     justify-content: space-around;
-    width: 40%;
+    width: 100%;
 }
 
 button {
     margin: 5px;
-    padding: 50px;
+    padding: 10px 20px;
     font-size: 16px;
+}
+
+/* 移动端样式 */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+    }
+
+    #game-container {
+        width: 100%;
+    }
+
+    #controls {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #controls > div {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+    }
 }
