@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puzzle Game - Rikka I Love You</title>
+    <title>拼图游戏 - 六花我爱你</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <meta name="description" content="A fun puzzle game with customizable images and multiple difficulty levels">
+    <meta name="description" content="一个有趣的拼图游戏，支持自定义图片和多种难度">
     <meta name="theme-color" content="#ff9eb5">
 </head>
 <body>
@@ -16,66 +16,66 @@
         <div class="game-header">
             <h1>
                 <i class="fas fa-puzzle-piece"></i>
-                Puzzle Game
-                <span class="subtitle">Picture Puzzle</span>
+                拼图游戏
+                <span class="subtitle">Puzzle Game</span>
             </h1>
         </div>
         
         <div class="controls">
             <input type="file" id="imageInput" accept="image/*" style="display: none;">
             <select id="difficulty">
-                <option value="2">Beginner (2x2)</option>
-                <option value="3">Easy (3x3)</option>
-                <option value="4">Normal (4x4)</option>
-                <option value="5">Medium (5x5)</option>
-                <option value="6">Hard (6x6)</option>
-                <option value="7">Expert (7x7)</option>
-                <option value="8">Master (8x8)</option>
-                <option value="9">Grandmaster (9x9)</option>
-                <option value="10">Ultimate (10x10)</option>
+                <option value="2">新手 (2x2)</option>
+                <option value="3">简单 (3x3)</option>
+                <option value="4">普通 (4x4)</option>
+                <option value="5">中等 (5x5)</option>
+                <option value="6">较难 (6x6)</option>
+                <option value="7">困难 (7x7)</option>
+                <option value="8">专家 (8x8)</option>
+                <option value="9">大师 (9x9)</option>
+                <option value="10">地狱 (10x10)</option>
             </select>
             <button id="startGame">
-                <i class="fas fa-play"></i> Start Game
+                <i class="fas fa-play"></i> 开始游戏
             </button>
             <button id="showRules" class="action-btn">
-                <i class="fas fa-question-circle"></i> How to Play
+                <i class="fas fa-question-circle"></i> 游戏说明
             </button>
             <div id="timer">
-                <i class="fas fa-clock"></i> Time: 0s
+                <i class="fas fa-clock"></i> 用时：0秒
             </div>
             <div id="moves">
-                <i class="fas fa-arrows-alt"></i> Moves: 0
+                <i class="fas fa-arrows-alt"></i> 移动次数：0
             </div>
         </div>
         
         <div class="game-container">
             <div id="puzzle-container"></div>
             <div id="preview">
-                <h3>Image Preview</h3>
-                <img id="preview-image" src="" alt="preview image">
+                <h3>原图预览</h3>
+                <img id="preview-image" src="" alt="预览图">
             </div>
         </div>
         <div class="actions" style="margin-top: 20px; text-align: center;">
             <button id="shareGame" class="action-btn">
-                <i class="fas fa-share-alt"></i> Share Game
+                <i class="fas fa-share-alt"></i> 分享游戏
             </button>
-            <button onclick="window.location.href='/EN/'" class="action-btn">
-                <i class="fas fa-home"></i> Back to Home
+            <button onclick="window.location.href='/'" class="action-btn">
+                <i class="fas fa-home"></i> 返回首页
             </button>
         </div>
     </div>
-    <div id="cropModal" class="crop-modal">
+    <div id="cropModal" class="crop-modal" style="display: none;">
         <div class="crop-container">
-            <h3>Crop Image</h3>
+            <h3>裁剪图片</h3>
             <div class="crop-area">
-                <img id="cropImage" src="" alt="Image to crop">
+                <img id="cropImage" src="" alt="待裁剪的图片">
             </div>
             <div class="crop-controls">
                 <button id="cropConfirm" class="action-btn">
-                    <i class="fas fa-check"></i> Confirm
+                    <i class="fas fa-check"></i> 确认
                 </button>
                 <button id="cropCancel" class="action-btn">
-                    <i class="fas fa-times"></i> Cancel
+                    <i class="fas fa-times"></i> 取消
                 </button>
             </div>
         </div>
