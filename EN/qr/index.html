@@ -3,42 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Maker</title>
+    <title>QR Code Generator - 六花我爱你</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
+        :root {
+            --primary-color: #ff9eb5;
+            --primary-dark: #ff7aa0;
+            --secondary-color: #ffb6c1;
+            --background-color: #fff5f7;
+            --text-color: #4a4a4a;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(255, 158, 181, 0.2);
         }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--background-color);
+            background-image: linear-gradient(45deg, #fff8f9 25%, transparent 25%),
+                          linear-gradient(-45deg, #fff8f9 25%, transparent 25%),
+                          linear-gradient(45deg, transparent 75%, #fff8f9 75%),
+                          linear-gradient(-45deg, transparent 75%, #fff8f9 75%);
+            background-size: 20px 20px;
+            font-family: 'Arial', sans-serif;
+            color: var(--text-color);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 158, 181, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+        }
+
         input[type="text"] {
             width: 80%;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
+            border: 1px solid var(--primary-color);
+            border-radius: var(--border-radius);
             font-size: 16px;
+            outline: none;
         }
+
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+            padding: 12px 20px;
             margin: 5px;
+            border: none;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
         #qrcode {
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            max-width: 300px;
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             margin-top: 20px;
+            text-decoration: none;
+            color: white;
+            background: var(--secondary-color);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .home-link:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
     </style>
 </head>
 <body>
-    <!-- 页面标题 -->
-    <h1>QR Code Maker</h1>
-    <!-- 输入框，用于输入文本或URL -->
-    <input type="text" id="text" placeholder="Text or URL...">
-    <!-- 生成二维码按钮，点击后调用generateQRCode函数 -->
-    <button onclick="generateQRCode()">Make QR Code</button>
-    <!-- 下载二维码按钮，初始状态为隐藏 -->
-    <button id="download" style="display: none;">Download Image</button>
-    <!-- 二维码显示区域 -->
-    <div id="qrcode"></div>
-    <!-- 引入qrcode.js库，用于生成二维码 -->
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <input type="text" id="text" placeholder="Enter text or URL...">
+        <button onclick="generateQRCode()">
+            <i class="fas fa-qrcode"></i> Generate QR Code
+        </button>
+        <button id="download" style="display: none;">
+            <i class="fas fa-download"></i> Download Image
+        </button>
+        <div id="qrcode"></div>
+        <a href="https://lh520.pw/" class="home-link">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script>
         /**
@@ -94,10 +179,5 @@
             }
         }
     </script>
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="https://lh520.pw/" style="text-decoration: none; color: white; background-color: #007BFF; padding: 10px 20px; border-radius: 5px;">
-            Home
-        </a>
-    </div>
 </body>
 </html>
