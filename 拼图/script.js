@@ -31,6 +31,9 @@ class PuzzleGame {
         
         // 添加分享按钮事件监听
         document.getElementById('shareGame').addEventListener('click', () => this.shareGame());
+        
+        // 添加一键复原按钮事件监听
+        document.getElementById('autoComplete').addEventListener('click', () => this.autoComplete());
     }
 
     bindEvents() {
@@ -460,7 +463,7 @@ class PuzzleGame {
                         <h3><i class="fas fa-shield-alt"></i> 隐私保护</h3>
                         <ul>
                             <li>所有图片处理均在本地进行</li>
-                            <li>不会上传任何图片到服务器</li>
+                            <li>���会上传任何图片到服务器</li>
                             <li>您的图片数据绝对安全</li>
                         </ul>
                     </div>
@@ -599,6 +602,77 @@ class PuzzleGame {
             this.selectedPiece.classList.remove('selected');
             this.selectedPiece = null;
         }
+    }
+
+    // 添加一键复原方法
+    async autoComplete() {
+        if (!this.previewImage.src) {
+            alert('请先上传图片！');
+            return;
+        }
+
+        // 禁用所有按钮，防止动画过程中的干扰
+        this.disableInteraction(true);
+
+        // 计算每个拼图块的正确位置
+        const correctPositions = [];
+        for (let i = 0; i < this.size * this.size; i++) {
+            const row = Math.floor(i / this.size);
+            const col = i % this.size;
+            correctPositions.push(`${-col * 100}% ${-row * 100}%`);
+        }
+
+        // 为每个拼图块添加过渡效果
+        this.pieces.forEach(piece => {
+            piece.style.transition = 'background-position 0.5s ease';
+        });
+
+        // 依次移动每个拼图块到正确位置
+        for (let i = 0; i < this.pieces.length; i++) {
+            const piece = this.pieces[i];
+            const currentPos = piece.style.backgroundPosition;
+            const targetPos = correctPositions[i];
+
+            if (currentPos !== targetPos) {
+                piece.style.backgroundPosition = targetPos;
+                this.moves++;
+                this.updateMovesDisplay();
+                // 等待动画完成
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
+        // 等待所有动画完成
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // 移除过渡效果
+        this.pieces.forEach(piece => {
+            piece.style.transition = '';
+        });
+
+        // 重新启用交互
+        this.disableInteraction(false);
+
+        // 检查是否完成
+        this.checkWin();
+    }
+
+    // 添加禁用/启用交互的辅助方法
+    disableInteraction(disabled) {
+        // 禁用/启用所有按钮
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.disabled = disabled;
+        });
+
+        // 禁用/启用拼图块的拖拽
+        this.pieces.forEach(piece => {
+            if (this.isMobileDevice()) {
+                piece.style.pointerEvents = disabled ? 'none' : 'auto';
+            } else {
+                piece.draggable = !disabled;
+            }
+        });
     }
 }
 
