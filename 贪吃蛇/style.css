@@ -409,7 +409,7 @@ body {
 /* 控制按钮样式 */
 @media (max-width: 768px) {
     #controls {
-        display: true;
+        display: none;
     }
     
     /* ... 其他移动端样式保持不变 ... */
