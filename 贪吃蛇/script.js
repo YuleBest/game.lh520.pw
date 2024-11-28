@@ -11,8 +11,8 @@ const rightButton = document.getElementById('right');
 let snake = [];
 let aiSnakes = [];
 let direction = { x: 10, y: 0 };
-let food = {};
-let specialFood = {};
+let foods = []; // 普通食物数组
+let specialFoods = []; // 特殊食物数组
 let obstacles = [];
 let score = 0;
 let time = 0;
@@ -21,19 +21,43 @@ let timerStarted = false;
 let snakeMoveInterval;
 let aiInterval;
 let timeInterval;
+let scoreChangeEffects = [];
+let lifePotion = {};
+let speedPotion = {};
+let slowPotion = {};
+let baseSpeed = 100; // 基础移动速度（毫秒）
+let currentSpeed = baseSpeed;
+let aiSnakeLives = {}; // 存储 AI 蛇的生命值
+let isInvincible = false;
+let invincibleTimer = null;
+let invincibleTimeLeft = 0;
 
 // 初始化游戏
 function initializeGame() {
     snake = [{ x: 100, y: 100 }];
     aiSnakes = [createAISnake(), createAISnake()];
     direction = { x: 0, y: 0 };
-    food = getRandomPosition();
-    specialFood = getRandomPosition();
+    
+    // 初始化食物数组
+    foods = Array(4).fill().map(() => getRandomPosition());
+    specialFoods = Array(2).fill().map(() => getRandomPosition());
+    
+    currentSpeed = baseSpeed;
+    lifePotion = Math.random() < 0.2 ? getRandomPosition() : null;
+    speedPotion = Math.random() < 0.5 ? getRandomPosition() : null; // 50%概率出现
+    slowPotion = Math.random() < 0.5 ? getRandomPosition() : null; // 50%概率出现
     obstacles = generateObstacles(5);
     score = 0;
     lives = 3;
     time = 0;
     timerStarted = false;
+
+    isInvincible = false;
+    if (invincibleTimer) {
+        clearInterval(invincibleTimer);
+        invincibleTimer = null;
+    }
+    invincibleTimeLeft = 0;
 
     updateDisplay();
 
@@ -41,8 +65,8 @@ function initializeGame() {
     clearInterval(aiInterval);
     clearInterval(timeInterval);
 
-    snakeMoveInterval = setInterval(updateSnakePosition, 100);
-    aiInterval = setInterval(moveAISnakes, 200);
+    snakeMoveInterval = setInterval(updateSnakePosition, currentSpeed);
+    aiInterval = setInterval(moveAISnakes, currentSpeed * 2);
     draw();
 }
 
@@ -50,8 +74,14 @@ function initializeGame() {
 function updateDisplay() {
     scoreDisplay.textContent = score;
     timeDisplay.textContent = `${time}`;
-    const livesDisplay = ''.repeat(lives);
-    document.getElementById('lives-board').textContent = livesDisplay;
+    
+    // 更新生命值显示
+    const livesDisplay = Array(lives).fill('<i class="fas fa-heart" style="color: #ff7aa0;"></i>').join(' ');
+    document.getElementById('lives-board').innerHTML = livesDisplay;
+    
+    // 更新速度显示（修改为倍数显示）
+    const speedMultiplier = (baseSpeed / currentSpeed).toFixed(2);
+    document.getElementById('speed-display').textContent = speedMultiplier;
 }
 
 // 获取随机位置
@@ -70,7 +100,10 @@ function getRandomDirection() {
 
 // 创建随机的 AI 蛇
 function createAISnake() {
+    const id = Math.random().toString(36).substr(2, 9); // 生成唯一ID
+    aiSnakeLives[id] = 1; // 设置 AI 蛇的生命值为 1
     return {
+        id: id,
         body: [getRandomPosition()],
         direction: getRandomDirection(),
         color: getRandomColor(),
@@ -79,7 +112,15 @@ function createAISnake() {
 
 // 随机颜色
 function getRandomColor() {
-    const colors = ['blue', 'orange', 'purple', 'pink'];
+    // 使用柔和的颜色，避免黄色、红色和黑色
+    const colors = [
+        '#3498db', // 蓝色
+        '#9b59b6', // 紫色
+        '#1abc9c', // 青绿色
+        '#16a085', // 深青色
+        '#27ae60', // 深绿色
+        '#8e44ad'  // 深紫色
+    ];
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
@@ -94,18 +135,49 @@ function generateObstacles(count) {
 
 // AI 蛇移动逻辑
 function moveAISnakes() {
+    aiSnakes = aiSnakes.filter(aiSnake => aiSnakeLives[aiSnake.id] > 0);
+    
     aiSnakes.forEach(aiSnake => {
         const head = {
             x: aiSnake.body[0].x + aiSnake.direction.x,
             y: aiSnake.body[0].y + aiSnake.direction.y
         };
+        let shouldGrow = false;
 
-        if (checkCollision(head) || Math.random() < 0.2) {
+        // 检查 AI 蛇是否撞到其他 AI 蛇
+        const hitOtherAI = aiSnakes.some(otherSnake => 
+            otherSnake !== aiSnake && 
+            otherSnake.body.some(segment => segment.x === head.x && segment.y === head.y)
+        );
+
+        // 检查 AI 蛇是否撞到玩家蛇
+        const hitPlayer = snake.some(segment => segment.x === head.x && segment.y === head.y);
+
+        // 检查是否吃到食物
+        if (foods.some(food => food.x === head.x && food.y === head.y)) {
+            shouldGrow = true;
+            const foodIndex = foods.findIndex(food => food.x === head.x && food.y === head.y);
+            foods[foodIndex] = getRandomPosition();
+        } else if (specialFoods.some(food => food.x === head.x && food.y === head.y)) {
+            shouldGrow = true;
+            const specialFoodIndex = specialFoods.findIndex(food => food.x === head.x && food.y === head.y);
+            specialFoods[specialFoodIndex] = getRandomPosition();
+        }
+
+        if (checkCollision(head, false) || hitOtherAI || Math.random() < 0.2) {
             aiSnake.direction = getRandomDirection();
+        } else if (hitPlayer) {
+            aiSnakeLives[aiSnake.id] = 0;
+            aiSnake.body.forEach(segment => {
+                score += 50;
+                showScoreChange(50, canvas.offsetLeft + segment.x, canvas.offsetTop + segment.y);
+                specialFoods[specialFoods.findIndex(food => food.x === head.x && food.y === head.y)] = segment;
+            });
         } else {
             aiSnake.body.unshift(head);
-            if (Math.random() < 0.1) aiSnake.body.push({});
-            aiSnake.body.pop();
+            if (!shouldGrow) {
+                aiSnake.body.pop();
+            }
         }
     });
     draw();
@@ -116,40 +188,154 @@ function updateSnakePosition() {
     if (direction.x === 0 && direction.y === 0) return;
 
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+    let shouldGrow = false; // 添加标记，判断是否应该增长
 
     if (checkCollision(head)) {
-        clearInterval(snakeMoveInterval);
-        clearInterval(aiInterval);
-        clearInterval(timeInterval);
-        alert(`游戏结束！得分：${score}`);
-        location.reload();
+        if (lives <= 0) {
+            clearInterval(snakeMoveInterval);
+            clearInterval(aiInterval);
+            clearInterval(timeInterval);
+        }
         return;
     }
 
-    if (head.x === food.x && head.y === food.y) {
+    // 检查是否吃到速度药水
+    if (speedPotion && head.x === speedPotion.x && head.y === speedPotion.y) {
+        currentSpeed = baseSpeed * 0.75;
+        clearInterval(snakeMoveInterval);
+        snakeMoveInterval = setInterval(updateSnakePosition, currentSpeed);
+        showScoreChange("⚡速度+25%", canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        speedPotion = null;
+        setTimeout(() => {
+            currentSpeed = baseSpeed;
+            clearInterval(snakeMoveInterval);
+            snakeMoveInterval = setInterval(updateSnakePosition, currentSpeed);
+            showScoreChange("⚡速度恢复", canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        }, 5000);
+    }
+
+    // 检查是否吃到生命药水
+    if (lifePotion && head.x === lifePotion.x && head.y === lifePotion.y) {
+        lives++;
+        showScoreChange("❤️+1", canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        lifePotion = null;
+    }
+
+    // 检查是否吃到缓慢药水
+    if (slowPotion && head.x === slowPotion.x && head.y === slowPotion.y) {
+        currentSpeed = baseSpeed * 1.25;
+        clearInterval(snakeMoveInterval);
+        snakeMoveInterval = setInterval(updateSnakePosition, currentSpeed);
+        showScoreChange("🐌速度-25%", canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        slowPotion = null;
+        setTimeout(() => {
+            currentSpeed = baseSpeed;
+            clearInterval(snakeMoveInterval);
+            snakeMoveInterval = setInterval(updateSnakePosition, currentSpeed);
+            showScoreChange("🐌速度恢复", canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        }, 5000);
+    }
+
+    // 检查是否吃到普通食物
+    const foodIndex = foods.findIndex(food => food.x === head.x && food.y === head.y);
+    if (foodIndex !== -1) {
         score += 25;
-        food = getRandomPosition();
-        snake.push({});
-    } else if (head.x === specialFood.x && head.y === specialFood.y) {
+        showScoreChange(25, canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        foods[foodIndex] = getRandomPosition();
+        shouldGrow = true;
+    }
+
+    // 检查是否吃到特殊食物
+    const specialFoodIndex = specialFoods.findIndex(food => food.x === head.x && food.y === head.y);
+    if (specialFoodIndex !== -1) {
         score += 100;
-        specialFood = getRandomPosition();
-        snake.push({});
-    } else {
+        showScoreChange(100, canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        specialFoods[specialFoodIndex] = getRandomPosition();
+        shouldGrow = true;
+    }
+
+    // 先添加新的头部
+    snake.unshift(head);
+    
+    // 如果没有吃到食物，则移除尾部
+    if (!shouldGrow) {
         snake.pop();
     }
 
-    snake.unshift(head);
     updateDisplay();
     draw();
 }
 
 // 碰撞检测
-function checkCollision(head) {
-    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) return true;
-    if (snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) return true;
-    if (obstacles.some(obs => obs.x === head.x && obs.y === head.y)) return true;
-    if (aiSnakes.some(aiSnake => aiSnake.body.some(segment => segment.x === head.x && segment.y === head.y))) return true;
-
+function checkCollision(head, isPlayer = true) {
+    // 检查是否撞墙
+    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+        if (isPlayer) {
+            lives = 0;
+            showGameOver();
+        }
+        return true;
+    }
+    
+    // 检查是否撞到障碍物
+    let hitObstacle = false;
+    let obstacleIndex = -1;
+    
+    obstacles.forEach((obs, index) => {
+        if (obs.x === head.x && obs.y === head.y) {
+            hitObstacle = true;
+            obstacleIndex = index;
+        }
+    });
+    
+    if (hitObstacle && isPlayer) {
+        if (isInvincible) {
+            // 无敌时间内撞到障碍物，直接消除障碍物
+            obstacles.splice(obstacleIndex, 1);
+            return false;
+        }
+        lives--;
+        obstacles.splice(obstacleIndex, 1);
+        showScoreChange(-1, canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        updateDisplay();
+        if (lives <= 0) {
+            showGameOver();
+            return true;
+        }
+        // 启动无敌时间
+        startInvincibleTime();
+        return false;
+    }
+    
+    if (isPlayer) {
+        // 检查是否撞到自己
+        if (snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) {
+            lives--;
+            showScoreChange(-1, canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+            updateDisplay();
+            if (lives <= 0) {
+                showGameOver();
+                return true;
+            }
+            // 启动无敌时间
+            startInvincibleTime();
+            return false;
+        }
+        
+        // 玩家主动撞击 AI 蛇时，击杀 AI 蛇并获得分数
+        aiSnakes.forEach(aiSnake => {
+            if (aiSnakeLives[aiSnake.id] > 0 && aiSnake.body.some(segment => segment.x === head.x && segment.y === head.y)) {
+                aiSnakeLives[aiSnake.id] = 0;
+                // 将 AI 蛇的每个身体部分转换为特殊食物
+                aiSnake.body.forEach(segment => {
+                    score += 50;
+                    showScoreChange(50, canvas.offsetLeft + segment.x, canvas.offsetTop + segment.y);
+                    specialFoods[specialFoods.findIndex(food => food.x === head.x && food.y === head.y)] = segment;
+                });
+            }
+        });
+    }
+    
     return false;
 }
 
@@ -157,27 +343,113 @@ function checkCollision(head) {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    snake.forEach(segment => {
-        ctx.fillStyle = 'green';
-        ctx.fillRect(segment.x, segment.y, 10, 10);
+    // 绘制玩家蛇的拖影效果
+    snake.forEach((segment, index) => {
+        const alpha = (snake.length - index) / snake.length;
+        ctx.fillStyle = `rgba(46, 204, 113, ${alpha * 0.3})`;
+        ctx.beginPath();
+        ctx.roundRect(segment.x - 2, segment.y - 2, 14, 14, 4);
+        ctx.fill();
     });
 
+    // 绘制玩家蛇的实体
+    snake.forEach((segment, index) => {
+        const isHead = index === 0;
+        
+        // 如果处于无敌状态，添加金色描边
+        if (isInvincible) {
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(segment.x - 1, segment.y - 1, 12, 12, 3);
+            ctx.stroke();
+        }
+
+        ctx.fillStyle = isHead ? '#27ae60' : '#2ecc71';
+        ctx.beginPath();
+        ctx.roundRect(segment.x, segment.y, 10, 10, 3);
+        ctx.fill();
+
+        if (isHead) {
+            ctx.shadowColor = '#2ecc71';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.roundRect(segment.x, segment.y, 10, 10, 3);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+    });
+
+    // 如果处于无敌状态，显示剩余时间
+    if (isInvincible) {
+        ctx.font = 'bold 24px Arial';
+        ctx.fillStyle = '#ffd700';
+        ctx.textAlign = 'center';
+        ctx.fillText(`无敌: ${invincibleTimeLeft}s`, canvas.width / 2, 30);
+        ctx.textAlign = 'left'; // 重置文本对齐
+    }
+
+    // 绘制 AI 蛇
     aiSnakes.forEach(aiSnake => {
-        aiSnake.body.forEach(segment => {
-            ctx.fillStyle = aiSnake.color;
-            ctx.fillRect(segment.x, segment.y, 10, 10);
-        });
+        if (aiSnakeLives[aiSnake.id] > 0) {
+            // AI蛇的拖影效果
+            aiSnake.body.forEach((segment, index) => {
+                const alpha = (aiSnake.body.length - index) / aiSnake.body.length;
+                ctx.fillStyle = `${aiSnake.color}${Math.floor(alpha * 50)}`; // 使用十六进制的透明度
+                ctx.beginPath();
+                ctx.roundRect(segment.x, segment.y, 10, 10, 3);
+                ctx.fill();
+            });
+        }
     });
 
-    ctx.fillStyle = 'yellow';
-    ctx.fillRect(food.x, food.y, 10, 10);
+    // 绘制所有普通食物
+    ctx.fillStyle = '#f1c40f';
+    ctx.shadowColor = '#f1c40f';
+    ctx.shadowBlur = 10;
+    foods.forEach(food => {
+        ctx.beginPath();
+        ctx.roundRect(food.x, food.y, 10, 10, 3);
+        ctx.fill();
+    });
 
-    ctx.fillStyle = 'red';
-    ctx.fillRect(specialFood.x, specialFood.y, 10, 10);
+    // 绘制所有特殊食物
+    ctx.fillStyle = '#e74c3c';
+    ctx.shadowColor = '#e74c3c';
+    specialFoods.forEach(food => {
+        ctx.beginPath();
+        ctx.roundRect(food.x, food.y, 10, 10, 3);
+        ctx.fill();
+    });
 
-    ctx.fillStyle = 'black';
+    // 绘制生命药水
+    if (lifePotion) {
+        ctx.font = '20px Arial';
+        ctx.fillText('❤️', lifePotion.x - 5, lifePotion.y + 15);
+    }
+
+    // 绘制速度药水
+    if (speedPotion) {
+        ctx.font = '20px Arial';
+        ctx.fillText('⚡', speedPotion.x - 5, speedPotion.y + 15);
+    }
+
+    // 绘制缓慢药水
+    if (slowPotion) {
+        ctx.font = '20px Arial';
+        ctx.fillText('🐌', slowPotion.x - 5, slowPotion.y + 15);
+    }
+
+    // 重置阴影
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+
+    // 绘制障碍物
+    ctx.fillStyle = '#34495e';
     obstacles.forEach(obs => {
-        ctx.fillRect(obs.x, obs.y, 10, 10);
+        ctx.beginPath();
+        ctx.roundRect(obs.x, obs.y, 10, 10, 3);
+        ctx.fill();
     });
 }
 
@@ -249,6 +521,11 @@ document.addEventListener('keydown', (e) => {
             timerStarted = true;
         }
     }
+
+    // 添加 R 键刷新功能
+    if (e.key.toLowerCase() === 'r') {
+        location.reload();
+    }
 });
 
 // 监听键盘事件，阻止箭头键默认滚动行为
@@ -263,3 +540,141 @@ window.addEventListener('keydown', function(e) {
 startButton.addEventListener('click', initializeGame);
 
 initializeGame();
+
+// 添加游戏结束弹窗
+function showGameOver() {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        z-index: 1000;
+    `;
+    modal.innerHTML = `
+        <h2>游戏结束</h2>
+        <p>最终得分：${score}分</p>
+        <p>游戏时间：${time}秒</p>
+        <p>剩余生命：${lives}</p>
+        <button onclick="location.reload()" style="margin-top: 10px;">重新开始</button>
+    `;
+    document.body.appendChild(modal);
+}
+
+// 添加分数变化效果函数
+function showScoreChange(amount, x, y) {
+    const effect = document.createElement('div');
+    effect.className = 'score-change';
+    effect.textContent = amount > 0 ? `+${amount}` : amount;
+    effect.style.cssText = `
+        position: fixed;
+        left: ${x}px;
+        top: ${y}px;
+        color: ${amount > 0 ? '#2ecc71' : '#e74c3c'};
+        font-weight: bold;
+        font-size: 20px;
+        pointer-events: none;
+        animation: floatUp 1s ease-out forwards;
+    `;
+    document.body.appendChild(effect);
+    
+    setTimeout(() => effect.remove(), 1000);
+}
+
+// 添加玩家碰撞处理函数
+function handlePlayerCollision() {
+    lives--;
+    updateDisplay();
+    
+    if (lives <= 0) {
+        showGameOver();
+        return true;
+    } else {
+        // 显示生命值减少提示
+        showScoreChange(-1, canvas.offsetLeft + canvas.width / 2, canvas.offsetTop);
+        // 重置蛇的位置
+        snake = [{ x: 100, y: 100 }];
+        direction = { x: 0, y: 0 };
+    }
+    return false;
+}
+
+// 添加无敌时间启动函数
+function startInvincibleTime() {
+    isInvincible = true;
+    invincibleTimeLeft = 5;
+    
+    // 清除之前的定时器
+    if (invincibleTimer) {
+        clearInterval(invincibleTimer);
+    }
+    
+    // 创建新的定时器
+    invincibleTimer = setInterval(() => {
+        invincibleTimeLeft--;
+        if (invincibleTimeLeft <= 0) {
+            isInvincible = false;
+            clearInterval(invincibleTimer);
+            invincibleTimer = null;
+        }
+    }, 1000);
+}
+
+// 添加分享功能
+document.getElementById('share-game').addEventListener('click', async () => {
+    const url = 'https://lh520.pw/贪吃蛇/';
+    
+    try {
+        // 尝试使用新的剪贴板 API
+        await navigator.clipboard.writeText(url);
+        
+        // 创建一个临时提示元素
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+            animation: fadeInOut 2s ease-in-out forwards;
+        `;
+        toast.textContent = '链接已复制到剪贴板！';
+        document.body.appendChild(toast);
+
+        // 2秒后移除提示
+        setTimeout(() => {
+            toast.remove();
+        }, 2000);
+    } catch (err) {
+        // 如果剪贴板 API 不可用，使用传统方法
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert('链接已复制到剪贴板！');
+    }
+});
+
+// 添加淡入淡出动画
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeInOut {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        20% { opacity: 1; transform: translate(-50%, 0); }
+        80% { opacity: 1; transform: translate(-50%, 0); }
+        100% { opacity: 0; transform: translate(-50%, -20px); }
+    }
+`;
+document.head.appendChild(style);

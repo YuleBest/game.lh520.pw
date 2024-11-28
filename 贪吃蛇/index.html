@@ -5,48 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>贪吃蛇 - 六花我爱你</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div id="game-container">
-        <div id="game-area">
-            <div id="score-board">
-                <span>分数: <span id="score"> 0 </span>分</span>
+        <div class="game-header">
+            <h1>贪吃蛇大作战</h1>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <i class="fas fa-star"></i>
+                    <span>分数: <span id="score">0</span></span>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-clock"></i>
+                    <span>时间: <span id="time">0</span>秒</span>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-heart"></i>
+                    <span id="lives-board"></span>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>速度: <span id="speed-display">100</span>x</span>
+                </div>
             </div>
-            <div id="time-board">
-                <span>时间: <span id="time"> 0 </span>秒</span>
-            </div>
-            <div id="lives-board"></div>
-            <canvas id="gameCanvas" width="400" height="400"></canvas>
         </div>
 
-        <!-- 图例区域 -->
-        <div id="legend">
-            <div class="legend-item">
-                <div class="color-block" style="background-color: yellow;"></div>
-                <span>普通食物</span>
-            </div>
-            <div class="legend-item">
-                <div class="color-block" style="background-color: red;"></div>
-                <span>特殊食物</span>
-            </div>
-            <div class="legend-item">
-                <div class="color-block" style="background-color: black;"></div>
-                <span>障碍物</span>
+        <div class="game-wrapper">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            
+            <div class="game-info">
+                <div class="rules">
+                    <h3>游戏规则</h3>
+                    <div class="rules-content">
+                        <p>• 方向键：控制蛇的移动</p>
+                        <p>• R键：快速重新开始</p>
+                        <p>• 撞墙/被AI击杀：直接死亡</p>
+                        <p>• 撞自己/障碍物：生命值-1</p>
+                        <p>• 击杀AI蛇：获得50分/节</p>
+                        <p>• 受伤后获得5秒无敌时间</p>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <h3>游戏说明</h3>
+                    <div class="legend-grid">
+                        <div class="legend-item">
+                            <div class="color-block snake"></div>
+                            <span>玩家蛇</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="color-block food"></div>
+                            <span>普通食物</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="color-block special-food"></div>
+                            <span>特殊食物</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="color-block obstacle"></div>
+                            <span>障碍物</span>
+                        </div>
+                        <div class="legend-item">
+                            <span>❤️</span>
+                            <span>生命药水</span>
+                        </div>
+                        <div class="legend-item">
+                            <span>⚡</span>
+                            <span>速度药水</span>
+                        </div>
+                        <div class="legend-item">
+                            <span>🐌</span>
+                            <span>缓慢药水</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="controls">
-            <button id="up">上</button>
+            <button id="up"><i class="fas fa-chevron-up"></i></button>
             <div class="horizontal-controls">
-                <button id="left">左</button>
-                <button id="right">右</button>
+                <button id="left"><i class="fas fa-chevron-left"></i></button>
+                <button id="right"><i class="fas fa-chevron-right"></i></button>
             </div>
-            <button id="down">下</button>
+            <button id="down"><i class="fas fa-chevron-down"></i></button>
         </div>
+
         <div class="actions">
-            <button id="start-game">开始游戏</button>
-            <p></p>
-            <a href="https://lh520.pw/" class="home-link">首页</a>
+            <div class="left-actions">
+                <button id="start-game" class="action-btn">
+                    <i class="fas fa-play"></i> 开始游戏
+                </button>
+                <button id="share-game" class="action-btn">
+                    <i class="fas fa-share-alt"></i> 分享给朋友
+                </button>
+            </div>
+            <div class="right-actions">
+                <a href="https://lh520.pw/" class="action-btn">
+                    <i class="fas fa-home"></i> 返回首页
+                </a>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
