@@ -35,8 +35,10 @@ const minSwipeDistance = 30;
 
 // 初始化游戏
 function initializeGame() {
-    // 移除之前可能存在的事件监听
-    document.removeEventListener('touchmove', preventScroll);
+    // 移除之前的事件监听
+    canvas.removeEventListener('touchstart', handleTouchStart);
+    canvas.removeEventListener('touchmove', handleTouchMove);
+    canvas.removeEventListener('touchend', handleTouchEnd);
     
     snake = [{ x: 100, y: 100 }];
     aiSnakes = [createAISnake(), createAISnake()];
@@ -48,8 +50,8 @@ function initializeGame() {
     
     currentSpeed = baseSpeed;
     lifePotion = Math.random() < 0.3 ? getRandomPosition() : null;
-    speedPotion = Math.random() < 0.6 ? getRandomPosition() : null; // 50%概率出现
-    slowPotion = Math.random() < 0.6 ? getRandomPosition() : null; // 50%概率出现
+    speedPotion = Math.random() < 0.6 ? getRandomPosition() : null;
+    slowPotion = Math.random() < 0.6 ? getRandomPosition() : null;
     obstacles = generateObstacles(5);
     score = 0;
     lives = 3;
@@ -73,18 +75,7 @@ function initializeGame() {
     aiInterval = setInterval(moveAISnakes, currentSpeed * 2);
     draw();
 
-    // 检查是否需要显示导
-    if (!localStorage.getItem('snakeGameGuideShown') && isMobile()) {
-        showTouchGuide();
-    }
-
-    if (isMobile()) {
-        initJoystick();
-    }
-
-    updateGameRules();
-
-    // 添加触摸事件监听
+    // 为画布添加触摸控制
     canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
     canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
     canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
@@ -569,7 +560,7 @@ function showGameOver() {
             </p>
             <p style="margin: 8px 0;">
                 <i class="fas fa-heart" style="color: var(--primary-color);"></i>
-                剩余生命：${lives}
+                剩余生命值${lives}
             </p>
         </div>
 
@@ -706,7 +697,7 @@ document.getElementById('share-game').addEventListener('click', async () => {
         // 尝试使用新的剪贴板 API
         await navigator.clipboard.writeText(url);
         
-        // 创建一个临时提示元素
+        // 创建一个临时提示元
         const toast = document.createElement('div');
         toast.style.cssText = `
             position: fixed;
@@ -775,7 +766,7 @@ document.addEventListener('keydown', (e) => {
         ArrowRight: { x: 10, y: 0 }
     };
 
-    // 获取当前��键对应的方向
+    // 获取当前键对应的方向
     const newDirection = directions[e.key];
 
     // 检查是否允许改变方向
@@ -854,68 +845,72 @@ function showGameIntro() {
             intro.remove();
             initializeGame();
             
-            // 为整个文档添加触摸事件监听，阻止默认行为
-            document.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-            }, { passive: false });
-            
-            document.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-            }, { passive: false });
+            // 只为画布添加触摸控制
+            canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+            canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
         }, 500);
     });
 }
 
-// 添加阻止滑动的函数
-function preventScroll(e) {
-    e.preventDefault();
-}
-
-// 添加触摸事件处理函数
+// 修改触摸事件处理函数
 function handleTouchStart(e) {
-    e.preventDefault();
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
+    // 只在画布上处理触摸事件
+    if (e.target === canvas) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        touchStartX = touch.clientX - rect.left;
+        touchStartY = touch.clientY - rect.top;
+    }
 }
 
 function handleTouchMove(e) {
-    e.preventDefault(); // 阻止浏览器默认行为
+    // 只在画布上阻止默认行为
+    if (e.target === canvas) {
+        e.preventDefault();
+    }
 }
 
 function handleTouchEnd(e) {
-    e.preventDefault();
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
-    
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
-    
-    // 检查是否达到最小滑动距离
-    if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
-        return; // 滑动距离太小，忽略
-    }
-    
-    // 判断主要的滑动方向
-    let newDirection;
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // 水平滑动
-        newDirection = deltaX > 0 ? { x: 10, y: 0 } : { x: -10, y: 0 };
-    } else {
-        // 垂直滑动
-        newDirection = deltaY > 0 ? { x: 0, y: 10 } : { x: 0, y: -10 };
-    }
-    
-    // 检查是否允许改变方向
-    if (isValidDirection(newDirection)) {
-        direction = newDirection;
+    // 只在画布上处理触摸事件
+    if (e.target === canvas) {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        const rect = canvas.getBoundingClientRect();
+        const touchEndX = touch.clientX - rect.left;
+        const touchEndY = touch.clientY - rect.top;
         
-        // 启动计时器
-        if (!timerStarted) {
-            timeInterval = setInterval(() => {
-                time++;
-                updateDisplay();
-            }, 1000);
-            timerStarted = true;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        
+        // 检查是否达到最小滑动距离
+        if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+            return; // 滑动距离太小，忽略
+        }
+        
+        // 判断主要的滑动方向
+        let newDirection;
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // 水平滑动
+            newDirection = deltaX > 0 ? { x: 10, y: 0 } : { x: -10, y: 0 };
+        } else {
+            // 垂直滑动
+            newDirection = deltaY > 0 ? { x: 0, y: 10 } : { x: 0, y: -10 };
+        }
+        
+        // 检查是否允许改变方向
+        if (isValidDirection(newDirection)) {
+            direction = newDirection;
+            
+            // 启动计时器
+            if (!timerStarted) {
+                timeInterval = setInterval(() => {
+                    time++;
+                    updateDisplay();
+                }, 1000);
+                timerStarted = true;
+            }
         }
     }
 }
