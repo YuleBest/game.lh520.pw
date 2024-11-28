@@ -1,33 +1,54 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>贪吃蛇 - 六花我爱你</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇 - 六花我爱你</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="game-container">
-    <div id="game-area">
-        <div id="score-board">分数: <span id="score">0</span></div>
-        <div id="time-speed">时间: <span id="time">0</span>秒 | 速度: <span id="speed">100</span>ms/格</div>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
-    </div>
-    <div id="controls">
-        <button id="up">上</button>
-        <div>
-            <button id="left">左</button>
-            <button id="right">右</button>
+    <div id="game-container">
+        <div id="game-area">
+            <div id="score-board">
+                <span>分数: <span id="score"> 0 </span>分</span>
+            </div>
+            <div id="time-board">
+                <span>时间: <span id="time"> 0 </span>秒</span>
+            </div>
+            <div id="lives-board"></div>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
         </div>
-        <button id="down">下</button>
+
+        <!-- 图例区域 -->
+        <div id="legend">
+            <div class="legend-item">
+                <div class="color-block" style="background-color: yellow;"></div>
+                <span>普通食物</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-block" style="background-color: red;"></div>
+                <span>特殊食物</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-block" style="background-color: black;"></div>
+                <span>障碍物</span>
+            </div>
+        </div>
+
+        <div id="controls">
+            <button id="up">上</button>
+            <div class="horizontal-controls">
+                <button id="left">左</button>
+                <button id="right">右</button>
+            </div>
+            <button id="down">下</button>
+        </div>
+        <div class="actions">
+            <button id="start-game">开始游戏</button>
+            <p></p>
+            <a href="https://lh520.pw/" class="home-link">首页</a>
+        </div>
     </div>
-    <div style="text-align: center; margin-top: 10px;">
-        <button id="start-game">开始游戏</button>
-        <a href="https://lh520.pw/" style="text-decoration: none; color: white; background-color: #007BFF; padding: 10px 20px; border-radius: 5px;">
-            返回首页
-        </a>
-    </div>
-</div>
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

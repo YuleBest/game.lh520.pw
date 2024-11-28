@@ -4,29 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>六花我爱你</title>
-    <meta name+"description" content="一个六花厨的自言自语">
-    <style>
-        a {
-            color: rgb(238, 75, 102);
-            text-decoration: none; /* 去掉下划线 */
-        }
-        a:hover {
-            text-decoration: underline; /* 鼠标悬停时显示下划线 */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <p>欢迎来到</p>
-    <h1><a href="https://lh520.pw/">六花我爱你.pw</a></h1>
-    <p>相信找到这的你一定也很喜欢六花吧~</p>
-    <p>可以<a href="/交个朋友/">交个朋友</a>哦</p>
-    <hr>
-    <h2>本站一些好玩的东西</h2>
-    <ul>
-        <li><a href="/贪吃蛇/">贪吃蛇（html+css+js 练习作品）</a></li>
-    </ul>
-    <hr>
-    <p>记住我们的站点：<a href="https://lh520.pw/">lh520.pw</a></p>
-    <p><a href="/EN/">ENGLISH</a> | <a href="https://github.com/YuleBest/lh520">在 GitHub 查看</a> | <a href="/test/">测试中的项目</a></p>
+    <header>
+        <h1>欢迎来到六花我爱你</h1>
+    </header>
+
+    <main>
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="搜索本站功能...">
+            <ul id="functionList">
+                <li>
+                    <a href="/二维码生成器/">
+                        <span class="item-title">二维码生成器</span>
+                        <span class="item-date">最近更新时间：2024-11-28</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/贪吃蛇/">
+                        <span class="item-title">贪吃蛇</span>
+                        <span class="item-date">最近更新时间：2024-11-27</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="/EN/">ENGLISH</a>
+            <a href="https://github.com/YuleBest/lh520" target="_blank">在 GitHub 上查看</a>
+            <a href="/test/">测试中的项目</a>
+            <a href="/关于本站/">关于本站</a>
+            <a href="/交个朋友/">交个朋友</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,32 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>六花我爱你</title>
-    <meta name+"description" content="A Rikka fanatic Talks to Itself">
-    <style>
-        a {
-            color: rgb(238, 75, 102);
-            text-decoration: none; /* 去掉下划线 */
-        }
-        a:hover {
-            text-decoration: underline; /* 鼠标悬停时显示下划线 */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <p>Welcome to</p>
-    <h1><a href="https://lh520.pw/">六花我爱你.pw</a></h1>
-    <p>I'm sure you found this and you love Rikka too~</p>
-    <p>You can <a href="/EN/friend/">Make friends with me! </a></p>
-    <hr>
-    <h2>Some fun stuff on this site</h2>
-    <ul>
-        <li><a href="/EN/snake/">'Viper (html+css+js Exercises)'</a></li>
-    </ul>
-    <hr>
-    <p>Remember our site: <a href="https://lh520.pw/">lh520.pw</a></p>
-    <p><a href="https://lh520.pw/">中文</a> | <a href="https://github.com/YuleBest/lh520">GitHub Page</a></p>
+    <header>
+        <h1>Welcome to 六花我爱你</h1>
+    </header>
+
+    <main>
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Search for site features...">
+            <ul id="functionList">
+                <li>
+                    <a href="/EN/qr/">
+                        <span class="item-title">QR Code Maker</span>
+                        <span class="item-date">Last Updated: 2024-11-28</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/EN/snake/">
+                        <span class="item-title">Snake</span>
+                        <span class="item-date">Last Updated: 2024-11-27</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="/">中文</a>
+            <a href="https://github.com/YuleBest/lh520" target="_blank">View on GitHub</a>
+            <a href="/test/">Projects in Testing</a>
+            <a href="/about/">About This Site</a>
+            <a href="/EN/friends/">Make Friends</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,85 +1,180 @@
+/* 全局设置：使页面在垂直和水平方向上居中，并隐藏滚动条 */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
-    overflow: hidden; /* 防止页面滑动 */
+    background-color: #faf0f4;
 }
 
+/* 游戏容器：设置为垂直布局，限制最大宽度并居中 */
 #game-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
+/* 游戏区域：设置水平居中 */
 #game-area {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
 }
 
-#start-game {
+/* 分数和时间的容器：水平排列，居中对齐，添加背景色和内边距 */
+#status-board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background-color: #ffe4e1;
+    padding: 10px;
+    border-radius: 8px;
     margin-bottom: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
 }
 
-#score-board, #time-speed {
+/* 分数和时间的公共样式 */
+#score-board, #time-board {
     font-size: 20px;
-    margin-bottom: 10px;
+    color: #333;
 }
 
+/* 分数和时间的数值样式：粉色高亮 */
+#score span, #time span {
+    color: #ff69b4;
+}
+
+/* 图例容器：水平排列图例项，均匀分布 */
+#legend {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* 图例项：包括颜色块和文字的组合 */
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    color: #333;
+}
+
+/* 图例中的颜色块样式 */
+.color-block {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+
+/* 游戏画布样式：包括边框和背景网格 */
 #gameCanvas {
-    border: 1px solid black;
+    border: 2px solid #ff69b4;
+    border-radius: 8px;
+    background-color: white;
+    margin-top: 10px;
+    background-image: linear-gradient(to right, #ffb6c1 1px, transparent 1px),
+                      linear-gradient(to bottom, #ffb6c1 1px, transparent 1px);
+    background-size: 10px 10px;
 }
 
+/* 控制按钮容器：垂直排列，上下按钮单独排列，左右按钮水平排列 */
+#controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* 左右按钮的水平排列 */
+.horizontal-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 控制按钮样式 */
 button {
-    margin: 0%;
-    padding: 0px 0px;
-    font-size: 0%;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ff69b4;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
-/* 移动端样式 */
+/* 鼠标悬停时按钮的样式变化 */
+button:hover {
+    background-color: #ff1493;
+}
+
+/* 游戏开始按钮和返回首页链接的样式 */
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* 返回首页链接的样式 */
+.home-link {
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+/* 鼠标悬停时链接的样式变化 */
+.home-link:hover {
+    background-color: #0056b3;
+}
+
+/* 移动设备适配：显示控制按钮 */
 @media (max-width: 768px) {
-    body {
-        height: auto;
-    }
-
-    #game-container {
-        width: 100%;
-    }
-
     #controls {
-        flex-direction: column;
-        width: 100%;
+        display: flex;
     }
 
-    #controls > div {
-        width: 100%;
+    /* 上按钮的顺序调整 */
+    #up {
+        order: 0;
     }
 
+    #down {
+        order: 4;
+    }
+
+    /* 左右按钮在移动设备上的排列方式 */
+    .horizontal-controls {
+        flex-direction: row;
+        justify-content: center;
+        order: 2;
+        gap: 30px;
+    }
+
+    /* 按钮在移动设备上的样式调整 */
     button {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
+        width: 80%;
         font-size: 16px;
+        padding: 15px;
     }
 
+}
+
+/* 大屏设备适配：隐藏控制按钮 */
+@media (min-width: 769px) {
     #controls {
-        width: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 10px;
+        display: none;
     }
-    
-    #controls > div {
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-    }
-    
 }
