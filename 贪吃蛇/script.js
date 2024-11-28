@@ -476,7 +476,7 @@ function draw() {
         ctx.fill();
     });
 
-    // 绘制所有特殊食
+    // 绘制所��特殊食
     ctx.fillStyle = '#e74c3c';
     ctx.shadowColor = '#e74c3c';
     specialFoods.forEach(food => {
@@ -838,8 +838,9 @@ window.addEventListener('keydown', function(e) {
     }
 });
 
-// 添加按钮点击事件
-upButton.addEventListener('click', () => {
+// 修改按钮点击事件处理
+upButton.addEventListener('click', (e) => {
+    e.preventDefault(); // 防止事件冒泡
     const newDir = { x: 0, y: -10 };
     if (isValidDirection(newDir)) {
         direction = newDir;
@@ -847,7 +848,8 @@ upButton.addEventListener('click', () => {
     }
 });
 
-downButton.addEventListener('click', () => {
+downButton.addEventListener('click', (e) => {
+    e.preventDefault();
     const newDir = { x: 0, y: 10 };
     if (isValidDirection(newDir)) {
         direction = newDir;
@@ -855,7 +857,8 @@ downButton.addEventListener('click', () => {
     }
 });
 
-leftButton.addEventListener('click', () => {
+leftButton.addEventListener('click', (e) => {
+    e.preventDefault();
     const newDir = { x: -10, y: 0 };
     if (isValidDirection(newDir)) {
         direction = newDir;
@@ -863,12 +866,77 @@ leftButton.addEventListener('click', () => {
     }
 });
 
-rightButton.addEventListener('click', () => {
+rightButton.addEventListener('click', (e) => {
+    e.preventDefault();
     const newDir = { x: 10, y: 0 };
     if (isValidDirection(newDir)) {
         direction = newDir;
         startTimer();
     }
+});
+
+// 添加触摸事件监听
+upButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const newDir = { x: 0, y: -10 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
+        startTimer();
+    }
+});
+
+downButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const newDir = { x: 0, y: 10 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
+        startTimer();
+    }
+});
+
+leftButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const newDir = { x: -10, y: 0 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
+        startTimer();
+    }
+});
+
+rightButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const newDir = { x: 10, y: 0 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
+        startTimer();
+    }
+});
+
+// 添加触摸反馈效果
+const addTouchFeedback = (button) => {
+    button.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        button.style.transform = 'scale(0.95)';
+        button.style.background = 'var(--primary-dark)';
+    });
+
+    button.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        button.style.transform = 'scale(1)';
+        button.style.background = 'var(--primary-color)';
+    });
+
+    // 处理触摸取消的情况
+    button.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        button.style.transform = 'scale(1)';
+        button.style.background = 'var(--primary-color)';
+    });
+};
+
+// 为所有控制按钮添加触摸反馈
+[upButton, downButton, leftButton, rightButton].forEach(button => {
+    addTouchFeedback(button);
 });
 
 // 辅助函数：启动计时器
