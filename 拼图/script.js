@@ -39,6 +39,11 @@ class PuzzleGame {
     handleImageUpload(e) {
         const file = e.target.files[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                alert('请选择图片文件！');
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = (event) => {
                 const img = new Image();
@@ -60,7 +65,13 @@ class PuzzleGame {
                         this.startButton.title = '点击开始游戏';
                     }
                 };
+                img.onerror = () => {
+                    alert('图片加载失败，请重试！');
+                };
                 img.src = event.target.result;
+            };
+            reader.onerror = () => {
+                alert('文件读取失败，请重试！');
             };
             reader.readAsDataURL(file);
         }
@@ -448,10 +459,18 @@ class PuzzleGame {
         const primaryColor = getComputedStyle(document.documentElement)
             .getPropertyValue('--primary-color').trim();
         
-        guide.addEventListener('click', () => {
+        // 修改点击事件，使用触摸事件
+        const handleClick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             this.imageInput.click();
-        });
+        };
 
+        // 添加触摸事件
+        guide.addEventListener('touchend', handleClick, { passive: false });
+        guide.addEventListener('click', handleClick);
+
+        // 拖放事件
         guide.addEventListener('dragover', (e) => {
             e.preventDefault();
             guide.style.borderColor = primaryDark;
@@ -472,6 +491,10 @@ class PuzzleGame {
         const preview = document.getElementById('preview');
         preview.innerHTML = '';
         preview.appendChild(guide);
+
+        // 确保文件输入元素正确设置
+        this.imageInput.setAttribute('accept', 'image/*');
+        this.imageInput.setAttribute('capture', 'camera'); // 允许使用相机
     }
 
     setupFileInputControl() {
