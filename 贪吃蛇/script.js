@@ -68,6 +68,11 @@ function initializeGame() {
     snakeMoveInterval = setInterval(updateSnakePosition, currentSpeed);
     aiInterval = setInterval(moveAISnakes, currentSpeed * 2);
     draw();
+
+    // 检查是否需要显示引导
+    if (!localStorage.getItem('snakeGameGuideShown') && isMobile()) {
+        showTouchGuide();
+    }
 }
 
 // 更新显示
@@ -453,89 +458,76 @@ function draw() {
     });
 }
 
-// 监听按钮点击事件，控制方向
-upButton.addEventListener('click', () => {
-    direction = { x: 0, y: -10 };
-    if (!timerStarted) {
-        timeInterval = setInterval(() => {
-            time++;
-            updateDisplay();
-        }, 1000);
-        timerStarted = true;
-    };
-});
-downButton.addEventListener('click', () => {
-    direction = { x: 0, y: 10 };
-    if (!timerStarted) {
-        timeInterval = setInterval(() => {
-            time++;
-            updateDisplay();
-        }, 1000);
-        timerStarted = true;
-    };
-});
-leftButton.addEventListener('click', () => {
-    direction = { x: -10, y: 0 };
-    if (!timerStarted) {
-        timeInterval = setInterval(() => {
-            time++;
-            updateDisplay();
-        }, 1000);
-        timerStarted = true;
-    };
-});
-rightButton.addEventListener('click', () => {
-    direction = { x: 10, y: 0 };
-    if (!timerStarted) {
-        timeInterval = setInterval(() => {
-            time++;
-            updateDisplay();
-        }, 1000);
-        timerStarted = true;
-    };
-});
+// 添加触摸引导遮罩
+function showTouchGuide() {
+    const guide = document.createElement('div');
+    guide.className = 'touch-guide';
+    guide.innerHTML = `
+        <div class="guide-overlay">
+            <div class="guide-area up">
+                <i class="fas fa-chevron-up"></i>
+                <span>上滑区域</span>
+            </div>
+            <div class="guide-area right">
+                <i class="fas fa-chevron-right"></i>
+                <span>右滑区域</span>
+            </div>
+            <div class="guide-area down">
+                <i class="fas fa-chevron-down"></i>
+                <span>下滑区域</span>
+            </div>
+            <div class="guide-area left">
+                <i class="fas fa-chevron-left"></i>
+                <span>左滑区域</span>
+            </div>
+            <div class="guide-center">
+                <span>点击任意位置开始</span>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(guide);
 
-// 控制方向键
-document.addEventListener('keydown', (e) => {
-    const directions = {
-        ArrowUp: { x: 0, y: -10 },
-        ArrowDown: { x: 0, y: 10 },
-        ArrowLeft: { x: -10, y: 0 },
-        ArrowRight: { x: 10, y: 0 }
-    };
+    guide.addEventListener('click', () => {
+        guide.remove();
+        localStorage.setItem('snakeGameGuideShown', 'true');
+    });
+}
 
-    // 获取当前按键对应的方向
-    const newDirection = directions[e.key];
+// 添加画布点击控制
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
 
-    // 如果按键是有效方向且不是反向的方向
-    if (newDirection &&
-        (newDirection.x !== -direction.x || newDirection.y !== -direction.y)) {
-        direction = newDirection;
-        
-        // 如果计时器没有启动，则开始计时
-        if (!timerStarted) {
-            timeInterval = setInterval(() => {
-                time++;
-                updateDisplay();
-            }, 1000);
-            timerStarted = true;
-        }
+    // 计算点击位置相对于中心的偏移
+    const deltaX = x - centerX;
+    const deltaY = y - centerY;
+
+    // 判断点击区域
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // 水平移动
+        direction = { x: deltaX > 0 ? 10 : -10, y: 0 };
+    } else {
+        // 垂直移动
+        direction = { x: 0, y: deltaY > 0 ? 10 : -10 };
     }
 
-    // 添加 R 键刷新功能
-    if (e.key.toLowerCase() === 'r') {
-        location.reload();
+    // 启动计时器
+    if (!timerStarted) {
+        timeInterval = setInterval(() => {
+            time++;
+            updateDisplay();
+        }, 1000);
+        timerStarted = true;
     }
 });
 
-// 监听键盘事件，阻止箭头键默认滚动行为
-window.addEventListener('keydown', function(e) {
-    const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
-
-    if (keys.includes(e.key)) {
-        e.preventDefault(); // 阻止默认滚动行为
-    }
-});
+// 检测是否为移动设备
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
 startButton.addEventListener('click', initializeGame);
 

@@ -281,45 +281,44 @@ button:hover {
 
 @media (max-width: 768px) {
     .stats-container {
+        order: 2;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
         padding: 0 5px;
+        width: 100%;
+        max-width: var(--game-size);
     }
 
     .stat-box {
-        width: auto;
-        justify-content: center;
-        padding: 10px;
-        font-size: 0.9rem;
+        padding: 8px;
+        font-size: 0.85rem;
     }
 
     #controls {
+        order: 3;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 15px;
-        margin: 25px 0;
+        margin: 15px 0;
         width: 100%;
         max-width: var(--game-size);
     }
 
     .horizontal-controls {
-        display: flex;
-        gap: 20px;
-        width: 100%;
-        justify-content: center;
+        gap: 30px;
     }
 
     #controls button {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
         padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 24px;
-        border-radius: 20px;
+        border-radius: 15px;
     }
 
     .horizontal-controls button {
@@ -330,26 +329,36 @@ button:hover {
     .game-wrapper {
         flex-direction: column;
         align-items: center;
-        gap: 20px;
+        gap: 15px;
     }
 
     #gameCanvas {
         width: var(--game-size);
         height: var(--game-size);
         margin-bottom: 0;
+        order: 1;
     }
 
     .game-info {
-        order: 3;
+        order: 4;
         width: 100%;
         max-width: var(--game-size);
         height: auto;
         min-height: 0;
         gap: 10px;
+        margin-top: 10px;
     }
 
-    #controls {
-        order: 2;
+    .actions {
+        order: 5;
+        margin-top: 15px;
+        width: 100%;
+        max-width: var(--game-size);
+    }
+
+    #game-container {
+        padding: 10px;
+        gap: 10px;
     }
 
     .rules, .legend {
@@ -365,11 +374,6 @@ button:hover {
         gap: 4px;
     }
 
-    .actions {
-        order: 4;
-        margin-top: 10px;
-    }
-
     .action-btn {
         padding: 12px 18px;
         font-size: 0.9rem;
@@ -377,27 +381,41 @@ button:hover {
 }
 
 @media (max-height: 600px) and (orientation: landscape) {
-    .stats-container {
-        grid-template-columns: repeat(4, 1fr);
-    }
-
     .game-wrapper {
         flex-direction: row;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    #gameCanvas {
+        order: 1;
+        margin-right: 15px;
     }
 
     .game-info {
-        order: 0;
+        order: 2;
         height: var(--game-size);
     }
 
     #controls {
-        order: 0;
+        order: 3;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: auto;
     }
 
-    #controls button {
-        width: 60px;
-        height: 60px;
-        font-size: 20px;
+    .stats-container {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        right: 0;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .actions {
+        margin-top: 20px;
     }
 }
 
@@ -415,4 +433,90 @@ button:hover {
 .score-change {
     z-index: 1000;
     text-shadow: 0 0 3px rgba(0,0,0,0.2);
+}
+
+/* 移除控制按钮相关样式，添加触摸引导样式 */
+.touch-guide {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.guide-overlay {
+    position: relative;
+    width: var(--game-size);
+    height: var(--game-size);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    padding: 10px;
+}
+
+.guide-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8rem;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    background: rgba(255, 255, 255, 0.1);
+    transition: background 0.3s;
+}
+
+.guide-area i {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.guide-area.up {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.guide-area.right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.guide-area.down {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.guide-area.left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.guide-center {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 10px;
+}
+
+/* 移除控制按钮相关的媒体查询样式 */
+@media (max-width: 768px) {
+    #controls {
+        display: none;
+    }
+    
+    /* ... 其他移动端样式保持不变 ... */
 }
