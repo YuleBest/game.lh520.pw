@@ -406,10 +406,10 @@ body {
     text-shadow: 0 0 3px rgba(0,0,0,0.2);
 }
 
-/* 移除控制按钮相关的媒体查询样式 */
+/* 控制按钮样式 */
 @media (max-width: 768px) {
     #controls {
-        display: none;
+        display: true;
     }
     
     /* ... 其他移动端样式保持不变 ... */

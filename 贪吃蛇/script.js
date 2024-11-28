@@ -60,29 +60,27 @@ document.addEventListener('touchend', (e) => {
     }
     
     // 判断主要的滑动方向
+    let newDirection;
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
         // 水平滑动
-        if (deltaX > 0 && direction.x !== -10) {
-            direction = { x: 10, y: 0 }; // 右
-        } else if (deltaX < 0 && direction.x !== 10) {
-            direction = { x: -10, y: 0 }; // 左
-        }
+        newDirection = deltaX > 0 ? { x: 10, y: 0 } : { x: -10, y: 0 };
     } else {
         // 垂直滑动
-        if (deltaY > 0 && direction.y !== -10) {
-            direction = { x: 0, y: 10 }; // 下
-        } else if (deltaY < 0 && direction.y !== 10) {
-            direction = { x: 0, y: -10 }; // 上
-        }
+        newDirection = deltaY > 0 ? { x: 0, y: 10 } : { x: 0, y: -10 };
     }
     
-    // 启动计时器
-    if (!timerStarted) {
-        timeInterval = setInterval(() => {
-            time++;
-            updateDisplay();
-        }, 1000);
-        timerStarted = true;
+    // 检查是否允许改变方向
+    if (isValidDirection(newDirection)) {
+        direction = newDirection;
+        
+        // 启动计时器
+        if (!timerStarted) {
+            timeInterval = setInterval(() => {
+                time++;
+                updateDisplay();
+            }, 1000);
+            timerStarted = true;
+        }
     }
 });
 
@@ -123,7 +121,7 @@ function initializeGame() {
     aiInterval = setInterval(moveAISnakes, currentSpeed * 2);
     draw();
 
-    // 检查是否需要显示引导
+    // 检查是否需要显示导
     if (!localStorage.getItem('snakeGameGuideShown') && isMobile()) {
         showTouchGuide();
     }
@@ -166,7 +164,7 @@ function getRandomDirection() {
 // 创建随机的 AI 蛇
 function createAISnake() {
     const id = Math.random().toString(36).substr(2, 9); // 生成唯一ID
-    aiSnakeLives[id] = 1; // 设置 AI 蛇的生命值为 1
+    aiSnakeLives[id] = 1; // 设置 AI 的生命值为 1
     return {
         id: id,
         body: [getRandomPosition()],
@@ -478,7 +476,7 @@ function draw() {
         ctx.fill();
     });
 
-    // 绘制所有特殊食物
+    // 绘制所有特殊食
     ctx.fillStyle = '#e74c3c';
     ctx.shadowColor = '#e74c3c';
     specialFoods.forEach(food => {
@@ -562,7 +560,7 @@ startButton.addEventListener('click', initializeGame);
 
 initializeGame();
 
-// 添加游戏结束弹窗
+// 修改游戏结束弹窗函数
 function showGameOver() {
     const modal = document.createElement('div');
     modal.style.cssText = `
@@ -571,19 +569,105 @@ function showGameOver() {
         left: 50%;
         transform: translate(-50%, -50%);
         background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
         text-align: center;
         z-index: 1000;
+        border: 1px solid rgba(255, 158, 181, 0.2);
+        min-width: 280px;
     `;
+
+    // 计算每秒得分
+    const scorePerSecond = time > 0 ? Math.round((score / time) * 10) / 10 : score;
+
     modal.innerHTML = `
-        <h2>游戏结束</h2>
-        <p>最终得分：${score}分</p>
-        <p>游戏时间：${time}秒</p>
-        <p>剩余生命：${lives}</p>
-        <button onclick="location.reload()" style="margin-top: 10px;">重新开始</button>
+        <h2 style="
+            color: var(--primary-dark);
+            margin: 0 0 20px 0;
+            font-size: 1.5rem;
+        ">游戏结束</h2>
+        
+        <div style="
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+        ">
+            <p style="margin: 8px 0;">
+                <i class="fas fa-star" style="color: var(--primary-color);"></i>
+                最终得分：${score}分
+            </p>
+            <p style="margin: 8px 0;">
+                <i class="fas fa-clock" style="color: var(--primary-color);"></i>
+                游戏时间：${time}秒
+            </p>
+            <p style="margin: 8px 0;">
+                <i class="fas fa-tachometer-alt" style="color: var(--primary-color);"></i>
+                每秒得分：${scorePerSecond}
+            </p>
+            <p style="margin: 8px 0;">
+                <i class="fas fa-heart" style="color: var(--primary-color);"></i>
+                剩余生命：${lives}
+            </p>
+        </div>
+
+        <div style="
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        ">
+            <button onclick="location.reload()" style="
+                padding: 12px 20px;
+                border-radius: var(--border-radius);
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">
+                <i class="fas fa-redo"></i>
+                重新开始
+            </button>
+            
+            <button onclick="window.location.href='https://lh520.pw/'" style="
+                padding: 12px 20px;
+                border-radius: var(--border-radius);
+                background: var(--secondary-color);
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">
+                <i class="fas fa-home"></i>
+                返回首页
+            </button>
+        </div>
     `;
+
+    // 添加按钮悬停效果
+    const buttons = modal.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseover', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 4px 8px rgba(255, 158, 181, 0.3)';
+        });
+        
+        button.addEventListener('mouseout', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+
     document.body.appendChild(modal);
 }
 
@@ -726,9 +810,8 @@ document.addEventListener('keydown', (e) => {
     // 获取当前按键对应的方向
     const newDirection = directions[e.key];
 
-    // 如果按键是有效方向且不是反向的方向
-    if (newDirection &&
-        (newDirection.x !== -direction.x || newDirection.y !== -direction.y)) {
+    // 检查是否允许改变方向
+    if (newDirection && isValidDirection(newDirection)) {
         direction = newDirection;
         
         // 如果计时器没有启动，则开始计时
@@ -757,29 +840,33 @@ window.addEventListener('keydown', function(e) {
 
 // 添加按钮点击事件
 upButton.addEventListener('click', () => {
-    if (direction.y !== 10) { // 防止反向移动
-        direction = { x: 0, y: -10 };
+    const newDir = { x: 0, y: -10 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
         startTimer();
     }
 });
 
 downButton.addEventListener('click', () => {
-    if (direction.y !== -10) {
-        direction = { x: 0, y: 10 };
+    const newDir = { x: 0, y: 10 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
         startTimer();
     }
 });
 
 leftButton.addEventListener('click', () => {
-    if (direction.x !== 10) {
-        direction = { x: -10, y: 0 };
+    const newDir = { x: -10, y: 0 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
         startTimer();
     }
 });
 
 rightButton.addEventListener('click', () => {
-    if (direction.x !== -10) {
-        direction = { x: 10, y: 0 };
+    const newDir = { x: 10, y: 0 };
+    if (isValidDirection(newDir)) {
+        direction = newDir;
         startTimer();
     }
 });
@@ -793,4 +880,16 @@ function startTimer() {
         }, 1000);
         timerStarted = true;
     }
+}
+
+// 添加方向验证函数
+function isValidDirection(newDir) {
+    // 如果蛇长度为1，允许任意方向移动
+    if (snake.length === 1) return true;
+    
+    // 检查是否是反方向移动
+    return !(
+        (newDir.x === -direction.x && newDir.y === direction.y) || 
+        (newDir.x === direction.x && newDir.y === -direction.y)
+    );
 }
