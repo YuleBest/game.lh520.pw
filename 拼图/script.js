@@ -463,7 +463,7 @@ class PuzzleGame {
                         <h3><i class="fas fa-shield-alt"></i> 隐私保护</h3>
                         <ul>
                             <li>所有图片处理均在本地进行</li>
-                            <li>���会上传任何图片到服务器</li>
+                            <li>我们不会上传任何图片到服务器</li>
                             <li>您的图片数据绝对安全</li>
                         </ul>
                     </div>
