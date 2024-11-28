@@ -58,21 +58,28 @@ body {
 .stats-container {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    padding: 0 10px;
+    gap: 15px;
+    padding: 10px;
+    width: 100%;
+    max-width: var(--game-size);
+    margin: 0 auto;
     flex-wrap: wrap;
 }
 
 .stat-box {
+    flex: 1;
+    min-width: 100px;
+    max-width: 150px;
     background: white;
     padding: 8px 15px;
     border-radius: var(--border-radius);
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 8px;
     box-shadow: var(--shadow);
     border: 1px solid rgba(255, 158, 181, 0.3);
-    font-size: clamp(0.8rem, 2vw, 1rem);
+    font-size: 0.9rem;
 }
 
 .stat-box i {
@@ -189,30 +196,34 @@ body {
 
 #controls {
     display: none;
-    gap: 10px;
-    margin: 20px 0;
 }
 
 .horizontal-controls {
     display: flex;
-    gap: 10px;
+    gap: 30px;
+    justify-content: center;
 }
 
-button {
-    padding: 15px 25px;
-    border: none;
-    border-radius: var(--border-radius);
+#controls button {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border-radius: 15px;
     background: var(--primary-color);
     color: white;
+    border: none;
     cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
-    box-shadow: 0 4px 6px rgba(255, 158, 181, 0.2);
+    transition: all 0.2s ease;
 }
 
-button:hover {
-    transform: translateY(-2px);
+#controls button:hover {
     background: var(--primary-dark);
-    box-shadow: 0 6px 12px rgba(255, 158, 181, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 158, 181, 0.3);
 }
 
 .actions {
@@ -281,102 +292,62 @@ button:hover {
 
 @media (max-width: 768px) {
     .stats-container {
-        order: 2;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        padding: 0 5px;
-        width: 100%;
-        max-width: var(--game-size);
+        gap: 10px;
     }
 
     .stat-box {
+        min-width: 0;
+        max-width: none;
         padding: 8px;
         font-size: 0.85rem;
     }
 
     #controls {
-        order: 3;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 15px;
-        margin: 15px 0;
+        margin: 20px auto;
         width: 100%;
         max-width: var(--game-size);
-    }
-
-    .horizontal-controls {
-        gap: 30px;
     }
 
     #controls button {
         width: 70px;
         height: 70px;
-        padding: 0;
+        font-size: 24px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 15px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
-        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
 
-    .horizontal-controls button {
-        width: 80px;
-        height: 80px;
+    #controls button:active {
+        transform: scale(0.95);
+        background: var(--primary-dark);
+    }
+
+    .horizontal-controls {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
     }
 
     .game-wrapper {
         flex-direction: column;
         align-items: center;
-        gap: 15px;
-    }
-
-    #gameCanvas {
-        width: var(--game-size);
-        height: var(--game-size);
-        margin-bottom: 0;
-        order: 1;
     }
 
     .game-info {
-        order: 4;
         width: 100%;
         max-width: var(--game-size);
-        height: auto;
-        min-height: 0;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .actions {
-        order: 5;
-        margin-top: 15px;
-        width: 100%;
-        max-width: var(--game-size);
-    }
-
-    #game-container {
-        padding: 10px;
-        gap: 10px;
-    }
-
-    .rules, .legend {
-        padding: 10px;
-    }
-
-    .rules-content {
-        font-size: 0.75rem;
-    }
-
-    .legend-grid {
-        font-size: 0.75rem;
-        gap: 4px;
-    }
-
-    .action-btn {
-        padding: 12px 18px;
-        font-size: 0.9rem;
     }
 }
 
@@ -435,83 +406,6 @@ button:hover {
     text-shadow: 0 0 3px rgba(0,0,0,0.2);
 }
 
-/* 移除控制按钮相关样式，添加触摸引导样式 */
-.touch-guide {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.guide-overlay {
-    position: relative;
-    width: var(--game-size);
-    height: var(--game-size);
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 5px;
-    padding: 10px;
-}
-
-.guide-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.8rem;
-    padding: 10px;
-    border-radius: var(--border-radius);
-    background: rgba(255, 255, 255, 0.1);
-    transition: background 0.3s;
-}
-
-.guide-area i {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-}
-
-.guide-area.up {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.guide-area.right {
-    grid-column: 3;
-    grid-row: 2;
-}
-
-.guide-area.down {
-    grid-column: 2;
-    grid-row: 3;
-}
-
-.guide-area.left {
-    grid-column: 1;
-    grid-row: 2;
-}
-
-.guide-center {
-    grid-column: 2;
-    grid-row: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.9rem;
-    text-align: center;
-    padding: 10px;
-}
-
 /* 移除控制按钮相关的媒体查询样式 */
 @media (max-width: 768px) {
     #controls {
@@ -519,4 +413,21 @@ button:hover {
     }
     
     /* ... 其他移动端样式保持不变 ... */
+}
+
+/* 添加虚拟摇杆样式 */
+#joystick-outer {
+    display: none;
+}
+
+/* 添加触摸引导样式 */
+.touch-guide {
+    display: none;
+}
+
+/* 桌面端隐藏控制按钮 */
+@media (min-width: 769px) {
+    #controls {
+        display: none;
+    }
 }

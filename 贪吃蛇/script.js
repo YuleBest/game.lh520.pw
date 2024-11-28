@@ -32,6 +32,60 @@ let isInvincible = false;
 let invincibleTimer = null;
 let invincibleTimeLeft = 0;
 
+// 添加触摸控制变量
+let touchStartX = 0;
+let touchStartY = 0;
+const minSwipeDistance = 30; // 最小滑动距离，防止误触
+
+// 添加触摸事件监听
+document.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+});
+
+document.addEventListener('touchmove', (e) => {
+    e.preventDefault(); // 防止页面滚动
+}, { passive: false });
+
+document.addEventListener('touchend', (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+    
+    // 检查是否达到最小滑动距离
+    if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+        return; // 滑动距离太小，忽略
+    }
+    
+    // 判断主要的滑动方向
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // 水平滑动
+        if (deltaX > 0 && direction.x !== -10) {
+            direction = { x: 10, y: 0 }; // 右
+        } else if (deltaX < 0 && direction.x !== 10) {
+            direction = { x: -10, y: 0 }; // 左
+        }
+    } else {
+        // 垂直滑动
+        if (deltaY > 0 && direction.y !== -10) {
+            direction = { x: 0, y: 10 }; // 下
+        } else if (deltaY < 0 && direction.y !== 10) {
+            direction = { x: 0, y: -10 }; // 上
+        }
+    }
+    
+    // 启动计时器
+    if (!timerStarted) {
+        timeInterval = setInterval(() => {
+            time++;
+            updateDisplay();
+        }, 1000);
+        timerStarted = true;
+    }
+});
+
 // 初始化游戏
 function initializeGame() {
     snake = [{ x: 100, y: 100 }];
@@ -73,6 +127,12 @@ function initializeGame() {
     if (!localStorage.getItem('snakeGameGuideShown') && isMobile()) {
         showTouchGuide();
     }
+
+    if (isMobile()) {
+        initJoystick();
+    }
+
+    updateGameRules();
 }
 
 // 更新显示
@@ -493,37 +553,6 @@ function showTouchGuide() {
     });
 }
 
-// 添加画布点击控制
-canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-
-    // 计算点击位置相对于中心的偏移
-    const deltaX = x - centerX;
-    const deltaY = y - centerY;
-
-    // 判断点击区域
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // 水平移动
-        direction = { x: deltaX > 0 ? 10 : -10, y: 0 };
-    } else {
-        // 垂直移动
-        direction = { x: 0, y: deltaY > 0 ? 10 : -10 };
-    }
-
-    // 启动计时器
-    if (!timerStarted) {
-        timeInterval = setInterval(() => {
-            time++;
-            updateDisplay();
-        }, 1000);
-        timerStarted = true;
-    }
-});
-
 // 检测是否为移动设备
 function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -670,3 +699,98 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// 修改游戏规则文本
+function updateGameRules() {
+    const rulesContent = document.querySelector('.rules-content');
+    rulesContent.innerHTML = `
+        <p>• 电脑：方向键控制移动</p>
+        <p>• 手机：滑动屏幕控制方向</p>
+        <p>• R键：快速重新开始</p>
+        <p>• 撞墙/被AI击杀：直接死亡</p>
+        <p>• 撞自己/障碍物：生命值-1</p>
+        <p>• 击杀AI蛇：获得50分/节</p>
+        <p>• 受伤后获得5秒无敌时间</p>
+    `;
+}
+
+// 添加键盘控制事件监听
+document.addEventListener('keydown', (e) => {
+    const directions = {
+        ArrowUp: { x: 0, y: -10 },
+        ArrowDown: { x: 0, y: 10 },
+        ArrowLeft: { x: -10, y: 0 },
+        ArrowRight: { x: 10, y: 0 }
+    };
+
+    // 获取当前按键对应的方向
+    const newDirection = directions[e.key];
+
+    // 如果按键是有效方向且不是反向的方向
+    if (newDirection &&
+        (newDirection.x !== -direction.x || newDirection.y !== -direction.y)) {
+        direction = newDirection;
+        
+        // 如果计时器没有启动，则开始计时
+        if (!timerStarted) {
+            timeInterval = setInterval(() => {
+                time++;
+                updateDisplay();
+            }, 1000);
+            timerStarted = true;
+        }
+    }
+
+    // R键重新开始游戏
+    if (e.key.toLowerCase() === 'r') {
+        location.reload();
+    }
+});
+
+// 监听键盘事件，阻止箭头键默认滚动行为
+window.addEventListener('keydown', function(e) {
+    const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    if (keys.includes(e.key)) {
+        e.preventDefault();
+    }
+});
+
+// 添加按钮点击事件
+upButton.addEventListener('click', () => {
+    if (direction.y !== 10) { // 防止反向移动
+        direction = { x: 0, y: -10 };
+        startTimer();
+    }
+});
+
+downButton.addEventListener('click', () => {
+    if (direction.y !== -10) {
+        direction = { x: 0, y: 10 };
+        startTimer();
+    }
+});
+
+leftButton.addEventListener('click', () => {
+    if (direction.x !== 10) {
+        direction = { x: -10, y: 0 };
+        startTimer();
+    }
+});
+
+rightButton.addEventListener('click', () => {
+    if (direction.x !== -10) {
+        direction = { x: 10, y: 0 };
+        startTimer();
+    }
+});
+
+// 辅助函数：启动计时器
+function startTimer() {
+    if (!timerStarted) {
+        timeInterval = setInterval(() => {
+            time++;
+            updateDisplay();
+        }, 1000);
+        timerStarted = true;
+    }
+}
