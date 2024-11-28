@@ -140,15 +140,20 @@ class PuzzleGame {
             piece.style.backgroundPosition = `${-col * pieceSize}% ${-row * pieceSize}%`;
             piece.style.backgroundSize = `${this.size * 100}%`;
 
-            piece.draggable = true;
-            piece.addEventListener('dragstart', (e) => this.handleDragStart(e));
-            piece.addEventListener('dragend', (e) => this.handleDragEnd(e));
-            piece.addEventListener('dragover', (e) => e.preventDefault());
-            piece.addEventListener('drop', (e) => this.handleDrop(e));
-
-            piece.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-            piece.addEventListener('touchmove', (e) => this.handleTouchMove(e));
-            piece.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+            // 检测是否为移动设备
+            if (this.isMobileDevice()) {
+                // 移动端使用点击选择方式
+                piece.addEventListener('click', (e) => this.handlePieceClick(e));
+                // 移除拖拽相关事件
+                piece.draggable = false;
+            } else {
+                // PC端保持拖拽功能
+                piece.draggable = true;
+                piece.addEventListener('dragstart', (e) => this.handleDragStart(e));
+                piece.addEventListener('dragend', (e) => this.handleDragEnd(e));
+                piece.addEventListener('dragover', (e) => e.preventDefault());
+                piece.addEventListener('drop', (e) => this.handleDrop(e));
+            }
 
             this.container.appendChild(piece);
             this.pieces.push(piece);
@@ -397,16 +402,16 @@ class PuzzleGame {
                             <li>选择并上传一张喜欢的图片</li>
                             <li>选择难度等级（2x2 到 10x10）</li>
                             <li>点击"开始游戏"打乱拼图</li>
-                            <li>通过拖动拼图块还原完整图片</li>
+                            <li>通过移动拼图块还原完整图片</li>
                         </ul>
                     </div>
                     
                     <div class="rules-section">
                         <h3><i class="fas fa-mouse-pointer"></i> 操作方式</h3>
                         <ul>
-                            <li>电脑：用鼠标拖放拼图块</li>
-                            <li>手机：触摸拖动拼图块</li>
-                            <li>拖动任意两个拼图块可以交换位置</li>
+                            <li>电脑端：用鼠标拖放拼图块</li>
+                            <li>手机端：点击两个拼图块进行交换</li>
+                            <li>任意两个拼图块都可以交换位置</li>
                         </ul>
                     </div>
 
@@ -535,6 +540,33 @@ class PuzzleGame {
             document.execCommand('copy');
             document.body.removeChild(input);
             alert('链接已复制到剪贴板！');
+        }
+    }
+
+    // 添加移动设备检测方法
+    isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // 添加点击处理方法
+    handlePieceClick(e) {
+        const piece = e.target;
+        
+        if (!this.selectedPiece) {
+            // 第一次点击，选中拼图块
+            this.selectedPiece = piece;
+            piece.classList.add('selected');
+        } else {
+            // 第二次点击，交换拼图块
+            if (this.selectedPiece !== piece) {
+                this.swapPieces(this.selectedPiece, piece);
+                this.moves++;
+                this.updateMovesDisplay();
+                this.checkWin();
+            }
+            // 清除选中状态
+            this.selectedPiece.classList.remove('selected');
+            this.selectedPiece = null;
         }
     }
 }

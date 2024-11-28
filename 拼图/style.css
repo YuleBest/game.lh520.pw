@@ -370,7 +370,7 @@ select:hover, button:hover, input[type="file"]::file-selector-button:hover {
     }
 }
 
-/* 添加文件输入���器的样式 */
+/* 添加文件输入器的样式 */
 #file-input-wrapper {
     display: block;
     transition: all 0.3s ease;
@@ -728,4 +728,24 @@ button.disabled:hover {
 
 #shareGame:hover {
     background: var(--primary-color);
+}
+
+/* 添加选中状态的样式 */
+.puzzle-piece.selected {
+    border: 2px solid var(--primary-color);
+    transform: scale(0.95);
+    opacity: 0.8;
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .puzzle-piece {
+        cursor: pointer;  /* 改为指针样式 */
+        transition: all 0.2s ease;  /* 添加过渡效果 */
+    }
+
+    .puzzle-piece:active {
+        transform: scale(0.95);  /* 点击时的反馈效果 */
+    }
 } 
