@@ -748,4 +748,81 @@ button.disabled:hover {
     .puzzle-piece:active {
         transform: scale(0.95);  /* 点击时的反馈效果 */
     }
-} 
+}
+
+/* 修改裁剪模态框样式 */
+.crop-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(45, 55, 72, 0.9);
+    z-index: 2000;
+    display: none; /* 默认隐藏 */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.crop-container {
+    background: var(--white);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    max-width: 90%;
+    width: 400px; /* 改小容器宽度 */
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.crop-container h3 {
+    color: var(--primary-dark);
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.crop-area {
+    width: 100%;
+    height: 300px; /* 改小裁剪区域高度 */
+    margin-bottom: 15px;
+    background: #f0f0f0;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 158, 181, 0.2);
+}
+
+.crop-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Cropper.js 自定义样式 */
+.cropper-view-box,
+.cropper-face {
+    border-radius: var(--border-radius);
+}
+
+.cropper-line,
+.cropper-point {
+    background-color: var(--primary-color);
+}
+
+.cropper-view-box {
+    outline: 2px solid var(--primary-color);
+    outline-color: rgba(255, 158, 181, 0.75);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .crop-container {
+        width: 300px;
+        padding: 15px;
+    }
+    
+    .crop-area {
+        height: 250px;
+    }
+}
+  
