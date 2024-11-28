@@ -92,7 +92,8 @@ body {
     margin-bottom: 20px;
     justify-content: center;
     position: relative;
-    align-items: stretch;
+    align-items: center;
+    flex-direction: column;
 }
 
 #gameCanvas {
@@ -194,38 +195,6 @@ body {
 .color-block.obstacle { background-color: #34495e; }
 .color-block.life-potion { background-color: #ff69b4; }
 
-#controls {
-    display: none;
-}
-
-.horizontal-controls {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-}
-
-#controls button {
-    width: 60px;
-    height: 60px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    border-radius: 15px;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-#controls button:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255, 158, 181, 0.3);
-}
-
 .actions {
     display: flex;
     justify-content: space-between;
@@ -304,42 +273,6 @@ body {
         font-size: 0.85rem;
     }
 
-    #controls {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        margin: 20px auto;
-        width: 100%;
-        max-width: var(--game-size);
-    }
-
-    #controls button {
-        width: 70px;
-        height: 70px;
-        font-size: 24px;
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    #controls button:active {
-        transform: scale(0.95);
-        background: var(--primary-dark);
-    }
-
-    .horizontal-controls {
-        display: flex;
-        gap: 30px;
-        justify-content: center;
-    }
-
     .game-wrapper {
         flex-direction: column;
         align-items: center;
@@ -367,27 +300,6 @@ body {
         order: 2;
         height: var(--game-size);
     }
-
-    #controls {
-        order: 3;
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: auto;
-    }
-
-    .stats-container {
-        position: absolute;
-        top: -40px;
-        left: 0;
-        right: 0;
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    .actions {
-        margin-top: 20px;
-    }
 }
 
 @keyframes floatUp {
@@ -406,28 +318,91 @@ body {
     text-shadow: 0 0 3px rgba(0,0,0,0.2);
 }
 
-/* 控制按钮样式 */
+.game-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.game-intro-content {
+    text-align: center;
+    color: white;
+    transform: scale(1);
+    transition: all 0.5s ease-out;
+}
+
+.game-intro.hiding {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.game-intro.hiding .game-intro-content {
+    transform: scale(0);
+}
+
+#gameCanvas {
+    transition: all 0.5s ease-out;
+    transform: scale(1);
+}
+
+#gameCanvas.zoomed {
+    transform: scale(1.5);
+}
+
+.legend-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    background: white;
+    border-radius: var(--border-radius);
+    margin: 10px auto;
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+    max-width: var(--game-size);
+}
+
+.legend-bar .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    padding: 4px 8px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 158, 181, 0.2);
+}
+
+.legend-bar .color-block {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+/* 保持原有的颜色定义 */
+.color-block.snake { background-color: #2ecc71; }
+.color-block.food { background-color: #f1c40f; }
+.color-block.special-food { background-color: #e74c3c; }
+.color-block.obstacle { background-color: #34495e; }
+
+/* 移动端适配 */
 @media (max-width: 768px) {
-    #controls {
-        display: none;
+    .legend-bar {
+        gap: 8px;
+        padding: 8px;
     }
     
-    /* ... 其他移动端样式保持不变 ... */
-}
-
-/* 添加虚拟摇杆样式 */
-#joystick-outer {
-    display: none;
-}
-
-/* 添加触摸引导样式 */
-.touch-guide {
-    display: none;
-}
-
-/* 桌面端隐藏控制按钮 */
-@media (min-width: 769px) {
-    #controls {
-        display: none;
+    .legend-bar .legend-item {
+        font-size: 0.7rem;
+        padding: 3px 6px;
     }
 }

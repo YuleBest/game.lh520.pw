@@ -3,10 +3,6 @@ const ctx = canvas.getContext('2d');
 const scoreDisplay = document.getElementById('score');
 const timeDisplay = document.getElementById('time');
 const startButton = document.getElementById('start-game');
-const upButton = document.getElementById('up');
-const downButton = document.getElementById('down');
-const leftButton = document.getElementById('left');
-const rightButton = document.getElementById('right');
 
 let snake = [];
 let aiSnakes = [];
@@ -32,72 +28,23 @@ let isInvincible = false;
 let invincibleTimer = null;
 let invincibleTimeLeft = 0;
 
-// 添加触摸控制变量
-let touchStartX = 0;
-let touchStartY = 0;
-const minSwipeDistance = 30; // 最小滑动距离，防止误触
-
-// 添加触摸事件监听
-document.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-});
-
-document.addEventListener('touchmove', (e) => {
-    e.preventDefault(); // 防止页面滚动
-}, { passive: false });
-
-document.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
-    
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
-    
-    // 检查是否达到最小滑动距离
-    if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
-        return; // 滑动距离太小，忽略
-    }
-    
-    // 判断主要的滑动方向
-    let newDirection;
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // 水平滑动
-        newDirection = deltaX > 0 ? { x: 10, y: 0 } : { x: -10, y: 0 };
-    } else {
-        // 垂直滑动
-        newDirection = deltaY > 0 ? { x: 0, y: 10 } : { x: 0, y: -10 };
-    }
-    
-    // 检查是否允许改变方向
-    if (isValidDirection(newDirection)) {
-        direction = newDirection;
-        
-        // 启动计时器
-        if (!timerStarted) {
-            timeInterval = setInterval(() => {
-                time++;
-                updateDisplay();
-            }, 1000);
-            timerStarted = true;
-        }
-    }
-});
-
 // 初始化游戏
 function initializeGame() {
+    // 移除之前可能存在的事件监听
+    document.removeEventListener('touchmove', preventScroll);
+    
     snake = [{ x: 100, y: 100 }];
     aiSnakes = [createAISnake(), createAISnake()];
     direction = { x: 0, y: 0 };
     
     // 初始化食物数组
-    foods = Array(4).fill().map(() => getRandomPosition());
-    specialFoods = Array(2).fill().map(() => getRandomPosition());
+    foods = Array(6).fill().map(() => getRandomPosition());
+    specialFoods = Array(3).fill().map(() => getRandomPosition());
     
     currentSpeed = baseSpeed;
-    lifePotion = Math.random() < 0.2 ? getRandomPosition() : null;
-    speedPotion = Math.random() < 0.5 ? getRandomPosition() : null; // 50%概率出现
-    slowPotion = Math.random() < 0.5 ? getRandomPosition() : null; // 50%概率出现
+    lifePotion = Math.random() < 0.3 ? getRandomPosition() : null;
+    speedPotion = Math.random() < 0.6 ? getRandomPosition() : null; // 50%概率出现
+    slowPotion = Math.random() < 0.6 ? getRandomPosition() : null; // 50%概率出现
     obstacles = generateObstacles(5);
     score = 0;
     lives = 3;
@@ -303,7 +250,7 @@ function updateSnakePosition() {
     const foodIndex = foods.findIndex(food => food.x === head.x && food.y === head.y);
     if (foodIndex !== -1) {
         score += 25;
-        showScoreChange(25, canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        showScoreChange(25, head.x, head.y);
         foods[foodIndex] = getRandomPosition();
         shouldGrow = true;
     }
@@ -312,7 +259,7 @@ function updateSnakePosition() {
     const specialFoodIndex = specialFoods.findIndex(food => food.x === head.x && food.y === head.y);
     if (specialFoodIndex !== -1) {
         score += 100;
-        showScoreChange(100, canvas.offsetLeft + head.x, canvas.offsetTop + head.y);
+        showScoreChange(100, head.x, head.y);
         specialFoods[specialFoodIndex] = getRandomPosition();
         shouldGrow = true;
     }
@@ -476,7 +423,7 @@ function draw() {
         ctx.fill();
     });
 
-    // 绘制所��特殊食
+    // 绘制所特殊食
     ctx.fillStyle = '#e74c3c';
     ctx.shadowColor = '#e74c3c';
     specialFoods.forEach(food => {
@@ -487,20 +434,20 @@ function draw() {
 
     // 绘制生命药水
     if (lifePotion) {
-        ctx.font = '20px Arial';
-        ctx.fillText('❤️', lifePotion.x - 5, lifePotion.y + 15);
+        ctx.font = '10px Arial';
+        ctx.fillText('❤️', lifePotion.x - 1, lifePotion.y + 8);
     }
 
     // 绘制速度药水
     if (speedPotion) {
-        ctx.font = '20px Arial';
-        ctx.fillText('⚡', speedPotion.x - 5, speedPotion.y + 15);
+        ctx.font = '10px Arial';
+        ctx.fillText('⚡', speedPotion.x - 1, speedPotion.y + 8);
     }
 
     // 绘制缓慢药水
     if (slowPotion) {
-        ctx.font = '20px Arial';
-        ctx.fillText('🐌', slowPotion.x - 5, slowPotion.y + 15);
+        ctx.font = '10px Arial';
+        ctx.fillText('🐌', slowPotion.x - 1, slowPotion.y + 8);
     }
 
     // 重置阴影
@@ -556,9 +503,13 @@ function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-startButton.addEventListener('click', initializeGame);
+startButton.addEventListener('click', () => {
+    showGameIntro();
+});
 
-initializeGame();
+window.addEventListener('load', () => {
+    showGameIntro();
+});
 
 // 修改游戏结束弹窗函数
 function showGameOver() {
@@ -671,20 +622,27 @@ function showGameOver() {
     document.body.appendChild(modal);
 }
 
-// 添加分数变化效果函数
+// 修改 showScoreChange 函数
 function showScoreChange(amount, x, y) {
+    const gameCanvas = document.getElementById('gameCanvas');
+    const rect = gameCanvas.getBoundingClientRect();
+    
+    // 计算蛇头上方20像素的位置
+    const offsetY = -20; // 向上偏移20像素
+    
     const effect = document.createElement('div');
     effect.className = 'score-change';
     effect.textContent = amount > 0 ? `+${amount}` : amount;
     effect.style.cssText = `
         position: fixed;
-        left: ${x}px;
-        top: ${y}px;
+        left: ${rect.left + x}px;
+        top: ${rect.top + y + offsetY}px; // 添加向上的偏移
         color: ${amount > 0 ? '#2ecc71' : '#e74c3c'};
         font-weight: bold;
         font-size: 20px;
         pointer-events: none;
         animation: floatUp 1s ease-out forwards;
+        z-index: 1000;
     `;
     document.body.appendChild(effect);
     
@@ -700,9 +658,9 @@ function handlePlayerCollision() {
         showGameOver();
         return true;
     } else {
-        // 显示生命值减少提示
-        showScoreChange(-1, canvas.offsetLeft + canvas.width / 2, canvas.offsetTop);
-        // 重置蛇的位置
+        // 使用蛇头位置显示生命值减少提示
+        const head = snake[0];
+        showScoreChange(-1, head.x, head.y);
         snake = [{ x: 100, y: 100 }];
         direction = { x: 0, y: 0 };
     }
@@ -838,118 +796,6 @@ window.addEventListener('keydown', function(e) {
     }
 });
 
-// 修改按钮点击事件处理
-upButton.addEventListener('click', (e) => {
-    e.preventDefault(); // 防止事件冒泡
-    const newDir = { x: 0, y: -10 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-downButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    const newDir = { x: 0, y: 10 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-leftButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    const newDir = { x: -10, y: 0 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-rightButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    const newDir = { x: 10, y: 0 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-// 添加触摸事件监听
-upButton.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const newDir = { x: 0, y: -10 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-downButton.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const newDir = { x: 0, y: 10 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-leftButton.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const newDir = { x: -10, y: 0 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-rightButton.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const newDir = { x: 10, y: 0 };
-    if (isValidDirection(newDir)) {
-        direction = newDir;
-        startTimer();
-    }
-});
-
-// 添加触摸反馈效果
-const addTouchFeedback = (button) => {
-    button.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        button.style.transform = 'scale(0.95)';
-        button.style.background = 'var(--primary-dark)';
-    });
-
-    button.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        button.style.transform = 'scale(1)';
-        button.style.background = 'var(--primary-color)';
-    });
-
-    // 处理触摸取消的情况
-    button.addEventListener('touchcancel', (e) => {
-        e.preventDefault();
-        button.style.transform = 'scale(1)';
-        button.style.background = 'var(--primary-color)';
-    });
-};
-
-// 为所有控制按钮添加触摸反馈
-[upButton, downButton, leftButton, rightButton].forEach(button => {
-    addTouchFeedback(button);
-});
-
-// 辅助函数：启动计时器
-function startTimer() {
-    if (!timerStarted) {
-        timeInterval = setInterval(() => {
-            time++;
-            updateDisplay();
-        }, 1000);
-        timerStarted = true;
-    }
-}
-
 // 添加方向验证函数
 function isValidDirection(newDir) {
     // 如果蛇长度为1，允许任意方向移动
@@ -960,4 +806,50 @@ function isValidDirection(newDir) {
         (newDir.x === -direction.x && newDir.y === direction.y) || 
         (newDir.x === direction.x && newDir.y === -direction.y)
     );
+}
+
+// 添加以下函数到文件中
+function showGameIntro() {
+    const intro = document.createElement('div');
+    intro.className = 'game-intro';
+    intro.innerHTML = `
+        <div class="game-intro-content">
+            <h1 style="color: var(--primary-color); font-size: 3em; margin-bottom: 30px;">
+                贪吃蛇大作战
+            </h1>
+            <div style="text-align: left; margin: 20px auto; max-width: 400px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                <h3 style="color: var(--primary-color); margin-bottom: 10px;">游戏规则</h3>
+                <p>• 电脑：方向键控制移动</p>
+                <p>• 手机：滑动屏幕控制方向</p>
+                <p>• R键：快速重新开始</p>
+                <p>• 撞墙/被AI击杀：直接死亡</p>
+                <p>• 撞自己/障碍物：生命值-1</p>
+                <p>• 击杀AI蛇：获得50分/节</p>
+                <p>• 受伤后获得5秒无敌时间</p>
+            </div>
+            <button id="start-intro" class="action-btn" style="font-size: 1.5em; padding: 15px 40px;">
+                开始游戏
+            </button>
+        </div>
+    `;
+    document.body.appendChild(intro);
+    
+    const canvas = document.getElementById('gameCanvas');
+    canvas.classList.add('zoomed');
+    
+    document.getElementById('start-intro').addEventListener('click', () => {
+        intro.classList.add('hiding');
+        canvas.classList.remove('zoomed');
+        setTimeout(() => {
+            intro.remove();
+            initializeGame();
+            // 仅在游戏开始后阻止页面滑动
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+        }, 500);
+    });
+}
+
+// 添加阻止滑动的函数
+function preventScroll(e) {
+    e.preventDefault();
 }
