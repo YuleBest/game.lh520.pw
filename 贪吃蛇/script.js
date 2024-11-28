@@ -28,6 +28,11 @@ let isInvincible = false;
 let invincibleTimer = null;
 let invincibleTimeLeft = 0;
 
+// 添加触摸控制变量
+let touchStartX = 0;
+let touchStartY = 0;
+const minSwipeDistance = 30;
+
 // 初始化游戏
 function initializeGame() {
     // 移除之前可能存在的事件监听
@@ -78,6 +83,11 @@ function initializeGame() {
     }
 
     updateGameRules();
+
+    // 添加触摸事件监听
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
 }
 
 // 更新显示
@@ -765,7 +775,7 @@ document.addEventListener('keydown', (e) => {
         ArrowRight: { x: 10, y: 0 }
     };
 
-    // 获取当前按键对应的方向
+    // 获取当前��键对应的方向
     const newDirection = directions[e.key];
 
     // 检查是否允许改变方向
@@ -843,8 +853,15 @@ function showGameIntro() {
         setTimeout(() => {
             intro.remove();
             initializeGame();
-            // 仅在游戏开始后阻止页面滑动
-            document.addEventListener('touchmove', preventScroll, { passive: false });
+            
+            // 为整个文档添加触摸事件监听，阻止默认行为
+            document.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+            }, { passive: false });
+            
+            document.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+            }, { passive: false });
         }, 500);
     });
 }
@@ -852,4 +869,53 @@ function showGameIntro() {
 // 添加阻止滑动的函数
 function preventScroll(e) {
     e.preventDefault();
+}
+
+// 添加触摸事件处理函数
+function handleTouchStart(e) {
+    e.preventDefault();
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}
+
+function handleTouchMove(e) {
+    e.preventDefault(); // 阻止浏览器默认行为
+}
+
+function handleTouchEnd(e) {
+    e.preventDefault();
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+    
+    // 检查是否达到最小滑动距离
+    if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+        return; // 滑动距离太小，忽略
+    }
+    
+    // 判断主要的滑动方向
+    let newDirection;
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // 水平滑动
+        newDirection = deltaX > 0 ? { x: 10, y: 0 } : { x: -10, y: 0 };
+    } else {
+        // 垂直滑动
+        newDirection = deltaY > 0 ? { x: 0, y: 10 } : { x: 0, y: -10 };
+    }
+    
+    // 检查是否允许改变方向
+    if (isValidDirection(newDirection)) {
+        direction = newDirection;
+        
+        // 启动计时器
+        if (!timerStarted) {
+            timeInterval = setInterval(() => {
+                time++;
+                updateDisplay();
+            }, 1000);
+            timerStarted = true;
+        }
+    }
 }
