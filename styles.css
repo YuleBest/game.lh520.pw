@@ -2,14 +2,14 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #ffe4e1; /* 背景使用浅粉色 */
+    background: #ffe4e1; /* 更改为淡粉色背景 */
     color: #333;
 }
 
 header {
     text-align: center;
     padding: 20px;
-    background: #ff69b4;
+    background: #ff69b4; /* 更柔和的粉色 */
     color: white;
 }
 
@@ -23,7 +23,7 @@ header {
     max-width: 400px;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ff1493;
+    border: 1px solid #ffb6c1; /* 更新边框颜色 */
     border-radius: 5px;
     outline: none;
 }
@@ -38,14 +38,14 @@ header {
 #functionList li {
     margin: 10px auto;
     padding: 15px;
-    background: #ffecec;
+    background: #ffecec; /* 更淡的粉色背景 */
     border: 1px solid #ffb6c1;
     border-radius: 5px;
     display: flex;
     align-items: center;
     gap: 10px;
     position: relative;
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
     max-width: 600px;
     width: 90%;
 }
@@ -61,7 +61,7 @@ header {
 
 #functionList a {
     text-decoration: none;
-    color: #ff1493;
+    color: #ff69b4; /* 更新链接颜色 */
     font-size: 18px;
     flex-grow: 1;
     text-align: center;
@@ -90,7 +90,7 @@ header {
 footer {
     text-align: center;
     padding: 20px;
-    background: #ff69b4;
+    background: #ff69b4; /* 保持与header一致 */
     color: white;
 }
 
@@ -243,6 +243,15 @@ footer {
 .warning-content p {
     margin: 10px 0;
     text-align: center;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* 添加等宽字体 */
+    letter-spacing: -0.5px; /* 稍微调整字母间距 */
+}
+
+/* 特别处理域名部分，让它更突出 */
+.warning-content p:last-child {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    letter-spacing: 0;
+    font-weight: 500; /* 稍微加粗 */
 }
 
 .warning-image {
@@ -262,6 +271,8 @@ footer {
     .warning-box {
         margin: 10px;
         padding: 15px;
+        width: calc(100% - 20px); /* 考虑边距 */
+        box-sizing: border-box;
     }
 
     .chat-container {
@@ -279,6 +290,38 @@ footer {
 
     .chat-content {
         font-size: 14px;
+    }
+
+    .chat-content ol {
+        padding-left: 20px; /* 减少列表缩进 */
+    }
+
+    .warning-content {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .highlight-text {
+        font-size: 18px; /* 稍微减小字体 */
+    }
+
+    /* 调整搜索框 */
+    #searchInput {
+        width: calc(100% - 20px);
+        margin: 10px;
+        box-sizing: border-box;
+    }
+
+    /* 调整功能列表 */
+    #functionList li {
+        width: calc(100% - 20px);
+        margin: 10px;
+        padding: 10px;
+    }
+
+    /* 调整页面整体边距 */
+    .search-section {
+        margin: 10px;
     }
 }
 
@@ -344,3 +387,26 @@ footer {
         transform: translateX(0);
     }
 }
+
+/* 添加过渡动画 */
+#functionList li {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 为列表项添加交错动画 */
+#functionList li:nth-child(1) { animation-delay: 0.1s; }
+#functionList li:nth-child(2) { animation-delay: 0.2s; }
+#functionList li:nth-child(3) { animation-delay: 0.3s; }
