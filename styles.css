@@ -125,3 +125,222 @@ footer {
         gap: 10px;
     }
 }
+
+/* 警告框样式 */
+.warning-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    text-align: left; /* 覆盖 search-section 的居中对齐 */
+}
+
+.warning-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.warning-title i {
+    color: #f56c6c;
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+.chat-container {
+    display: flex;
+    margin: 15px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.chat-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.chat-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chat-message {
+    flex: 1;
+}
+
+.chat-name {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.chat-content {
+    color: #666;
+    line-height: 1.6;
+}
+
+.chat-content ol {
+    margin: 10px 0 10px 20px;
+    padding-left: 15px;
+}
+
+.chat-content li {
+    margin: 8px 0;
+}
+
+.warning-content {
+    margin: 15px 0;
+    padding: 15px;
+    background: #fef0f0;
+    border-radius: 4px;
+    color: #f56c6c;
+    line-height: 1.6;
+    font-size: 15px;
+    text-align: center;
+    opacity: 0; /* 初始隐藏 */
+    transform: scale(5) translateY(-100px); /* 初始位置在上方且放大 */
+    animation: smashIn 0.8s cubic-bezier(.17,.67,.24,.99) 4s forwards; /* 增加动画时间到 0.8s */
+    position: relative;
+}
+
+/* 修改砸入动画，使回弹更慢 */
+@keyframes smashIn {
+    0% {
+        opacity: 0;
+        transform: scale(5) translateY(-100px);
+    }
+    50% {
+        opacity: 1;
+    }
+    70% {
+        transform: scale(0.8) translateY(0);
+    }
+    85% {
+        transform: scale(1.1);
+    }
+    92% {
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.warning-content p {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.warning-image {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.warning-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+    .warning-box {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .chat-container {
+        padding: 10px;
+    }
+
+    .chat-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .warning-title {
+        font-size: 16px;
+    }
+
+    .chat-content {
+        font-size: 14px;
+    }
+}
+
+.highlight-text {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: 10px 0;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* 添加打字机效果的动画样式 */
+.typing-effect {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.typing-item {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* 为每个列表项设置不同的延迟 */
+.typing-item:nth-child(1) { animation-delay: 0.5s; }
+.typing-item:nth-child(2) { animation-delay: 1.0s; }
+.typing-item:nth-child(3) { animation-delay: 1.5s; }
+.typing-item:nth-child(4) { animation-delay: 2.0s; }
+.typing-item:nth-child(5) { animation-delay: 2.5s; }
+.typing-item:nth-child(6) { animation-delay: 3.0s; }
+.typing-item:nth-child(7) { animation-delay: 3.5s; }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
