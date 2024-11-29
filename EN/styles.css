@@ -1,3 +1,11 @@
+html, body {
+    overflow-x: hidden; /* 禁止水平滚动 */
+    width: 100%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
