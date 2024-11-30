@@ -463,3 +463,29 @@ html, body {
     font-size: 12px;
     opacity: 0.7;
 }
+
+/* 修改功能列表在移动端的样式 */
+@media (max-width: 600px) {
+    #functionList li {
+        width: auto; /* 移除固定宽度 */
+        margin: 10px;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    #functionList a {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .item-title {
+        font-size: 16px; /* 稍微减小字体大小 */
+        margin-bottom: 8px;
+    }
+
+    .item-date {
+        font-size: 12px;
+    }
+}

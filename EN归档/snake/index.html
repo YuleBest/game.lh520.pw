@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greedy Snake - Rikka I Love You</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <div class="game-header">
+            <h1>Greedy Snake Battle</h1>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <i class="fas fa-star"></i>
+                    <span>Score: <span id="score">0</span></span>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-clock"></i>
+                    <span>Time: <span id="time">0</span>s</span>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-heart"></i>
+                    <span id="lives-board"></span>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Speed: <span id="speed-display">100</span>x</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-wrapper">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+
+        <div class="legend-bar">
+            <div class="legend-item"><div class="color-block snake"></div>Player</div>
+            <div class="legend-item"><div class="color-block food"></div>Food</div>
+            <div class="legend-item"><div class="color-block special-food"></div>Special</div>
+            <div class="legend-item"><div class="color-block obstacle"></div>Obstacle</div>
+            <div class="legend-item">❤️Life</div>
+            <div class="legend-item">⚡Speed Up</div>
+            <div class="legend-item">🐌Slow Down</div>
+        </div>
+        
+        <div class="actions">
+            <div class="left-actions">
+                <button id="start-game" class="action-btn">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button id="share-game" class="action-btn">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+            <div class="right-actions">
+                <a href="https://lh520.pw/" class="action-btn">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

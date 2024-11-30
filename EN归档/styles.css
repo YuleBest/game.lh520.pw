@@ -1,0 +1,284 @@
+html, body {
+    overflow-x: hidden; /* 禁止水平滚动 */
+    width: 100%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #ffe4e1; /* 背景使用浅粉色 */
+    color: #333;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background: #ff69b4;
+    color: white;
+}
+
+.search-section {
+    text-align: center;
+    margin: 20px;
+}
+
+#searchInput {
+    width: 80%;
+    max-width: 400px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ff1493;
+    border-radius: 5px;
+    outline: none;
+}
+
+#functionList {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    counter-reset: item; /* 初始化序号计数器 */
+}
+
+#functionList li {
+    margin: 10px auto;
+    padding: 15px;
+    background: #ffecec;
+    border: 1px solid #ffb6c1;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    transition: transform 0.3s;
+    max-width: 600px;
+    width: 90%;
+}
+
+#functionList li::before {
+    content: counter(item) ".";
+    counter-increment: item; /* 自动生成序号 */
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff1493;
+    margin-right: 10px;
+}
+
+#functionList a {
+    text-decoration: none;
+    color: #ff1493;
+    font-size: 18px;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.item-title {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.item-date {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
+
+#functionList a:hover {
+    text-decoration: underline;
+    color: #c71585;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #ff69b4;
+    color: white;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.footer-links a:hover {
+    background: #ff1493;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    #searchInput {
+        width: 90%;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* 警告框样式 */
+.warning-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    text-align: left;
+}
+
+/* 打字机效果动画 */
+.typing-effect {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.typing-item {
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* 动画延迟 */
+.typing-item:nth-child(1) { animation-delay: 0.5s; }
+.typing-item:nth-child(2) { animation-delay: 1.0s; }
+.typing-item:nth-child(3) { animation-delay: 1.5s; }
+.typing-item:nth-child(4) { animation-delay: 2.0s; }
+.typing-item:nth-child(5) { animation-delay: 2.5s; }
+.typing-item:nth-child(6) { animation-delay: 3.0s; }
+.typing-item:nth-child(7) { animation-delay: 3.5s; }
+
+/* 砸入动画 */
+@keyframes smashIn {
+    0% {
+        opacity: 0;
+        transform: scale(5) translateY(-100px);
+    }
+    50% {
+        opacity: 1;
+    }
+    70% {
+        transform: scale(0.8) translateY(0);
+    }
+    85% {
+        transform: scale(1.1);
+    }
+    92% {
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 其他动画 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 列表动画 */
+#functionList li {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 列表项动画延迟 */
+#functionList li:nth-child(1) { animation-delay: 0.1s; }
+#functionList li:nth-child(2) { animation-delay: 0.2s; }
+#functionList li:nth-child(3) { animation-delay: 0.3s; }
+
+/* 访问统计样式 */
+.visit-stats {
+    margin-top: 15px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+}
+
+.visit-stats time {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* 响应式样式 */
+@media (max-width: 600px) {
+    .warning-box {
+        margin: 10px;
+        padding: 15px;
+        width: calc(100% - 20px);
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+
+    .warning-image img {
+        max-width: 100%;
+        height: auto;
+        width: 100%;
+    }
+
+    .search-section,
+    .chat-container,
+    .warning-content,
+    #functionList,
+    .footer-links {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 其他移动端样式 */
+    #functionList li {
+        width: calc(100% - 20px);
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .search-section {
+        margin: 10px;
+    }
+}
