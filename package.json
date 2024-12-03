@@ -1,0 +1,22 @@
+{
+  "name": "lh520",
+  "version": "1.0.0",
+  "main": "script.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "daisyui": "^4.12.14",
+    "tailwindcss": "^3.4.15"
+  },
+  "dependencies": {
+    "flyonui": "^1.1.0"
+  }
+}

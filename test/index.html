@@ -1,25 +1,116 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>测试中的项目</title>
-    <style>
-        a {
-            color: rgb(238, 75, 102);
-            text-decoration: none; /* 去掉下划线 */
-        }
-        a:hover {
-            text-decoration: underline; /* 鼠标悬停时显示下划线 */
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>测试项目 - 六花我爱你</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
-    <h1>测试中的项目</h1>
-    <p>请注意：这里的项目不保证可以正常使用，仅供测试！</p>
-    <hr>
-    <ul>
-        <li>暂无</li>
-    </ul>
+<body class="bg-base-200">
+    <!-- 导航栏 -->
+    <div class="bg-base-100">
+        <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex-1">
+                <a href="/" class="btn btn-ghost text-xl">六花我爱你</a>
+            </div>
+            <div class="flex-none gap-2">
+                <label class="swap swap-rotate">
+                    <input type="checkbox" class="theme-controller" value="synthwave" />
+                    <!-- sun/moon icons 部分保持不变 -->
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 页面标题 -->
+        <div class="text-center py-8">
+            <h1 class="text-4xl font-bold text-primary">测试项目</h1>
+            <p class="mt-2 text-base-content/70">这里是正在开发中的新功能</p>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-1">
+            <!-- 测试项目列表 -->
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+                <!-- 项目卡片 1 -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
+                            <h2 class="card-title text-primary">音乐播放器</h2>
+                            <div class="badge badge-secondary">开发中</div>
+                        </div>
+                        <p class="text-base-content/70">一个简单的在线音乐播放器，支持播放列表和歌词显示</p>
+                        <div class="card-actions justify-between items-center mt-4">
+                            <div class="badge badge-outline">预计完成时间：2024-12-15</div>
+                            <div class="badge badge-primary">进度：60%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目卡片 2 -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
+                            <h2 class="card-title text-primary">天气预报</h2>
+                            <div class="badge badge-warning">计划中</div>
+                        </div>
+                        <p class="text-base-content/70">实时天气查询工具，支持多城市天气预报和空气质量指数</p>
+                        <div class="card-actions justify-between items-center mt-4">
+                            <div class="badge badge-outline">预计完成时间：2024-12-30</div>
+                            <div class="badge badge-primary">进度：20%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目卡片 3 -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
+                            <h2 class="card-title text-primary">记事本</h2>
+                            <div class="badge badge-accent">测试中</div>
+                        </div>
+                        <p class="text-base-content/70">在线笔记工具，支持 Markdown 格式和云端同步</p>
+                        <div class="card-actions justify-between items-center mt-4">
+                            <div class="badge badge-outline">预计完成时间：2024-12-20</div>
+                            <div class="badge badge-primary">进度：80%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 反馈区域 -->
+            <div class="card bg-base-100 shadow-xl mt-8 max-w-2xl mx-auto">
+                <div class="card-body">
+                    <h2 class="card-title text-primary">功能反馈</h2>
+                    <p class="text-base-content/70">欢迎提供你的建议和想法</p>
+                    
+                    <div class="form-control mt-4">
+                        <label class="label">
+                            <span class="label-text">你想要什么新功能？</span>
+                        </label>
+                        <textarea id="feedback" class="textarea h-24" placeholder="请描述你想要的功能..."></textarea>
+                        
+                        <div class="flex justify-end mt-4">
+                            <button class="btn btn-primary" onclick="submitFeedback()">提交反馈</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer footer-center p-6 mt-8">
+            <div class="grid grid-flow-col gap-4">
+                <a href="/" class="link link-hover link-primary">返回首页</a>
+                <span class="divider divider-horizontal"></span>
+                <a href="https://github.com/YuleBest/lh520" class="link link-hover link-primary">GitHub</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/theme.js"></script>
+    <script src="feedback.js"></script>
 </body>
 </html>

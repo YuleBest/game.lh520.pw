@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>交个朋友 - 六花我爱你</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-base-200">
+    <!-- 导航栏 -->
+    <div class="bg-base-100">
+        <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex-1">
+                <a href="/" class="btn btn-ghost text-xl">六花我爱你</a>
+            </div>
+            <div class="flex-none gap-2">
+                <label class="swap swap-rotate">
+                    <input type="checkbox" class="theme-controller" value="synthwave" />
+                    <!-- sun/moon icons 部分保持不变 -->
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 页面标题 -->
+        <div class="text-center py-8">
+            <h1 class="text-4xl font-bold text-primary">交个朋友</h1>
+            <p class="mt-2 text-base-content/70">欢迎加入我们的社区</p>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-1">
+            <div class="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
+                <!-- 留言板 -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">留言板</h2>
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text">昵称</span>
+                            </label>
+                            <input type="text" id="name" class="input" placeholder="请输入你的昵称">
+                            
+                            <label class="label mt-4">
+                                <span class="label-text">留言内容</span>
+                            </label>
+                            <textarea id="message" class="textarea h-24" placeholder="说点什么吧..."></textarea>
+                            
+                            <button class="btn btn-primary mt-4" onclick="submitMessage()">发送留言</button>
+                        </div>
+                        
+                        <!-- 留言列表 -->
+                        <div class="divider">最新留言</div>
+                        <div id="messageList" class="space-y-4 overflow-y-auto max-h-[60vh]">
+                            <!-- 留言将通过 JavaScript 动态添加 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 社区指南 -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">社区指南</h2>
+                        <div class="space-y-4">
+                            <div class="alert alert-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>请遵守社区规则，共同维护良好的交流环境</span>
+                            </div>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>友善交流，互相尊重</li>
+                                <li>不发布违法或不当内容</li>
+                                <li>避免发布垃圾广告</li>
+                                <li>保护个人隐私信息</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 联系方式 -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">其他联系方式</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                <span>QQ群：123456789</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <span>邮箱：contact@example.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 友情链接 -->
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">友情链接</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <a href="#" class="link link-primary">示例链接 1</a>
+                            <a href="#" class="link link-primary">示例链接 2</a>
+                            <a href="#" class="link link-primary">示例链接 3</a>
+                            <a href="#" class="link link-primary">示例链接 4</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer footer-center p-6 mt-8">
+            <div class="grid grid-flow-col gap-4">
+                <a href="/" class="link link-hover link-primary">返回首页</a>
+                <span class="divider divider-horizontal"></span>
+                <a href="https://github.com/YuleBest/lh520" class="link link-hover link-primary">GitHub</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/theme.js"></script>
+    <script src="message.js"></script>
+</body>
+</html>

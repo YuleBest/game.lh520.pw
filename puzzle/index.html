@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>拼图游戏 - 六花我爱你</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="/src/output.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+</head>
+<body class="bg-base-200">
+    <!-- 导航栏 -->
+    <div class="bg-base-100">
+        <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex-1">
+                <a href="/" class="btn btn-ghost text-xl">六花我爱你</a>
+            </div>
+            <div class="flex-none gap-2">
+                <label class="swap swap-rotate">
+                    <input type="checkbox" class="theme-controller" value="synthwave" />
+                    <!-- sun/moon icons 部分保持不变 -->
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 页面标题 -->
+        <div class="text-center py-8">
+            <h1 class="text-4xl font-bold text-primary">拼图游戏</h1>
+            <p class="mt-2 text-base-content/70">点击方块移动，将图片还原</p>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-1">
+            <div class="card bg-base-100 shadow-xl max-w-2xl mx-auto">
+                <div class="card-body">
+                    <!-- 游戏控制 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+                        <div class="stats shadow">
+                            <div class="stat">
+                                <div class="stat-title">移动次数</div>
+                                <div class="stat-value text-primary" id="moves">0</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-title">用时</div>
+                                <div class="stat-value text-secondary" id="timer">00:00</div>
+                            </div>
+                        </div>
+                        <div class="join">
+                            <select class="select join-item" id="difficulty">
+                                <option value="3">3 x 3</option>
+                                <option value="4" selected>4 x 4</option>
+                                <option value="5">5 x 5</option>
+                            </select>
+                            <button class="btn btn-primary join-item" id="startButton">开始游戏</button>
+                        </div>
+                    </div>
+
+                    <!-- 图片选择 -->
+                    <div class="form-control mb-4 w-full max-w-md mx-auto">
+                        <label class="label">
+                            <span class="label-text">选择图片</span>
+                        </label>
+                        <input type="file" 
+                               class="file-input w-full" 
+                               accept="image/*"
+                               id="imageInput" />
+                    </div>
+
+                    <!-- 拼图区域 -->
+                    <div class="puzzle-container w-full max-w-[min(90vw,400px)] mx-auto" id="puzzleContainer">
+                        <!-- 拼图块将通过 JavaScript 动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer footer-center p-6 mt-8">
+            <div class="grid grid-flow-col gap-4">
+                <a href="/" class="link link-hover link-primary">返回首页</a>
+                <span class="divider divider-horizontal"></span>
+                <a href="https://github.com/YuleBest/lh520" class="link link-hover link-primary">GitHub</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/theme.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 

@@ -1,0 +1,249 @@
+/* 游戏区域样式 */
+.puzzle-container {
+    display: grid;
+    gap: 2px;
+    background-color: var(--fallback-b3,oklch(var(--b3)/1));
+    padding: 2px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.puzzle-piece {
+    position: relative;
+    aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 1px solid var(--fallback-b3,oklch(var(--b3)/1));
+    overflow: visible;
+}
+
+.puzzle-piece:hover:not(.selected) {
+    transform: scale(0.98);
+}
+
+.puzzle-piece.empty {
+    background: transparent;
+    cursor: default;
+}
+
+/* 游戏状态样式 */
+.stats {
+    transition: all 0.3s ease;
+}
+
+.stat-value {
+    animation: valueChange 0.3s ease;
+}
+
+@keyframes valueChange {
+    0% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* 图片选择区域样式 */
+.file-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.file-input {
+    width: 100%;
+    cursor: pointer;
+}
+
+.file-input:focus {
+    outline: 2px solid var(--fallback-p,oklch(var(--p)/1));
+    outline-offset: 2px;
+}
+
+/* 胜利效果 */
+.puzzle-container.completed::after {
+    content: "恭喜完成！";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    /* 调整拼图区域布局 */
+    .flex.gap-4.justify-center {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    /* 调整拼图网格大小 */
+    .puzzle-grid {
+        width: min(90vw, 350px) !important;
+        padding: 2px;
+    }
+
+    /* 调整源区域和目标区域的顺序 */
+    .source-grid {
+        order: 2; /* 将源区域（左侧拼图）放到下面 */
+    }
+
+    .target-grid {
+        order: 1; /* 将目标区域（右侧空槽）放到上面 */
+    }
+
+    /* 调整游戏控制区域布局 */
+    .game-controls {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .stats {
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .join {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .join > * {
+        flex: 1;
+        min-width: max-content;
+    }
+
+    /* 优化拼图块触摸体验 */
+    .puzzle-piece {
+        touch-action: none;
+    }
+
+    .puzzle-piece:hover {
+        transform: none;
+    }
+
+    .puzzle-piece.selected {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 3px var(--fallback-p,oklch(var(--p)/1));
+        border-width: 2px;
+    }
+
+    /* 优化槽位触摸体验 */
+    .puzzle-slot {
+        touch-action: none;
+    }
+
+    /* 调整预览模态框 */
+    .preview-modal > div {
+        width: 90vw;
+        margin: 1rem;
+    }
+
+    .preview-modal img {
+        max-height: 70vh;
+    }
+
+    /* 调整按钮大小，便于触摸 */
+    .btn {
+        min-height: 3rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* 添加新的样式 */
+.puzzle-grid {
+    display: grid;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 8px;
+    background-color: var(--fallback-b3,oklch(var(--b3)/1));
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.puzzle-grid .puzzle-piece.selected {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 2px var(--fallback-p,oklch(var(--p)/1));
+    z-index: 10;
+    border: 2px dashed var(--fallback-s,oklch(var(--s)/1)) !important;
+}
+
+.puzzle-grid .puzzle-piece:hover:not(.selected) {
+    transform: scale(0.98);
+}
+
+.puzzle-grid .puzzle-piece {
+    position: relative;
+    aspect-ratio: 1;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border: 1px solid var(--fallback-b3,oklch(var(--b3)/1));
+    overflow: visible;
+}
+
+.puzzle-slot {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: var(--fallback-b2,oklch(var(--b2)/0.3));
+    border-radius: 4px;
+    border: 2px dashed var(--fallback-b3,oklch(var(--b3)/1));
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.puzzle-slot:hover {
+    background-color: var(--fallback-b2,oklch(var(--b2)/0.5)) !important;
+}
+
+.empty-grid .puzzle-slot {
+    background-color: var(--fallback-b2,oklch(var(--b2)/0.3));
+}
+
+/* 添加预览相关样式 */
+.preview-modal {
+    transition: all 0.3s ease;
+}
+
+.preview-modal img {
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.preview-modal .btn-circle {
+    background: var(--fallback-b1,oklch(var(--b1)/1));
+    border: 2px solid var(--fallback-b3,oklch(var(--b3)/1));
+}
+
+/* 添加源区域特定样式 */
+
+/* 添加触摸反馈动画 */
+@keyframes touchPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+.touch-feedback {
+    animation: touchPulse 0.3s ease;
+}

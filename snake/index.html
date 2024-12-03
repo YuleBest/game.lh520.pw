@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>贪吃蛇 - 六花我爱你</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="bg-base-200">
+    <!-- 导航栏 -->
+    <div class="bg-base-100">
+        <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex-1">
+                <a href="/" class="btn btn-ghost text-xl">六花我爱你</a>
+            </div>
+            <div class="flex-none gap-2">
+                <label class="swap swap-rotate">
+                    <input type="checkbox" class="theme-controller" value="synthwave" />
+                    <!-- sun/moon icons 部分保持不变 -->
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 页面标题 -->
+        <div class="text-center py-8">
+            <h1 class="text-4xl font-bold text-primary">贪吃蛇</h1>
+            <p class="mt-2 text-base-content/70">经典的贪吃蛇游戏，支持键盘和触摸控制</p>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-1">
+            <div class="card bg-base-100 shadow-xl max-w-3xl mx-auto">
+                <div class="card-body">
+                    <!-- 游戏状态 -->
+                    <div class="stats shadow mb-4">
+                        <div class="stat">
+                            <div class="stat-title">生命值</div>
+                            <div class="stat-value text-error" id="lives">3</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">速度</div>
+                            <div class="stat-value text-warning" id="speed">1</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">得分</div>
+                            <div class="stat-value text-success" id="score">0</div>
+                        </div>
+                    </div>
+
+                    <!-- 游戏控制 -->
+                    <div class="flex justify-center gap-4 mb-4">
+                        <button class="btn btn-primary" onclick="startGame()">开始游戏</button>
+                        <button class="btn" onclick="togglePause()">暂停</button>
+                        <button class="btn btn-error" onclick="resetGame()">重新开始</button>
+                    </div>
+
+                    <!-- 游戏区域 -->
+                    <div class="relative">
+                        <div id="gameBoard" class="game-board">
+                            <!-- 游戏格子将通过 JavaScript 动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 移动端控制按钮 -->
+                    <div class="game-controls mt-4 md:hidden">
+                        <div class="grid grid-cols-3 gap-2 justify-items-center">
+                            <div></div>
+                            <button class="btn btn-circle btn-lg" onclick="handleDirection('up')">↑</button>
+                            <div></div>
+                            <button class="btn btn-circle btn-lg" onclick="handleDirection('left')">←</button>
+                            <button class="btn btn-circle btn-lg" onclick="handleDirection('down')">↓</button>
+                            <button class="btn btn-circle btn-lg" onclick="handleDirection('right')">→</button>
+                        </div>
+                    </div>
+
+                    <!-- 游戏说明 -->
+                    <div class="mt-6">
+                        <div class="collapse bg-base-200">
+                            <input type="checkbox" /> 
+                            <div class="collapse-title text-xl font-medium">
+                                游戏说明
+                            </div>
+                            <div class="collapse-content"> 
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>使用方向键或屏幕按钮控制蛇的移动</li>
+                                    <li>吃到食物可以增加分数和长度</li>
+                                    <li>每吃到3个食物会提升速度</li>
+                                    <li>碰到墙壁或自身会失去一条生命</li>
+                                    <li>收集特殊道具可以获得临时能力：
+                                        <ul class="list-disc list-inside ml-4">
+                                            <li>黄色：临时加速</li>
+                                            <li>蓝色：临时无敌</li>
+                                            <li>绿色：额外分数</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer footer-center p-6 mt-8">
+            <div class="grid grid-flow-col gap-4">
+                <a href="/" class="link link-hover link-primary">返回首页</a>
+                <span class="divider divider-horizontal"></span>
+                <a href="https://github.com/YuleBest/lh520" class="link link-hover link-primary">GitHub</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/theme.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

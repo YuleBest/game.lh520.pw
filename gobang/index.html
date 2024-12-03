@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>五子棋 - 六花我爱你</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 1px;
+            background-color: var(--fallback-b3,oklch(var(--b3)/1));
+            padding: 1px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+            z-index: 1;
+            position: relative;
+        }
+        .cell {
+            aspect-ratio: 1;
+            background-color: var(--fallback-b1,oklch(var(--b1)/1));
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .cell:hover {
+            background-color: var(--fallback-b2,oklch(var(--b2)/1));
+        }
+        .cell.black::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background-color: #000;
+        }
+        .cell.white::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 1px solid #000;
+        }
+        .difficulty-btn {
+            width: 100%;
+            justify-content: start;
+            text-align: left;
+        }
+        
+        .difficulty-btn.btn-active {
+            background-color: var(--fallback-p,oklch(var(--p)/1));
+            color: white;
+        }
+        
+        .dropdown-content {
+            min-width: 8rem;
+        }
+        .dropdown .dropdown-content {
+            z-index: 100 !important;
+        }
+        .join .dropdown {
+            position: relative;
+        }
+        .join .dropdown .dropdown-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-base-200">
+    <!-- 导航栏 -->
+    <div class="bg-base-100">
+        <div class="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex-1">
+                <a href="/" class="btn btn-ghost text-xl">六花我爱你</a>
+            </div>
+            <div class="flex-none gap-2">
+                <label class="swap swap-rotate">
+                    <input type="checkbox" class="theme-controller" value="synthwave" />
+                    <!-- sun/moon icons 部分保持不变 -->
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 页面标题 -->
+        <div class="text-center py-8">
+            <h1 class="text-4xl font-bold text-primary">五子棋</h1>
+            <p class="mt-2 text-base-content/70">经典的五子棋游戏，支持双人对战</p>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-1">
+            <div class="card bg-base-100 shadow-xl max-w-3xl mx-auto">
+                <div class="card-body">
+                    <!-- 游戏控制 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+                        <div class="stats shadow">
+                            <div class="stat">
+                                <div class="stat-title">当前回合</div>
+                                <div class="stat-value" id="currentPlayer">黑方</div>
+                            </div>
+                        </div>
+                        <div class="join">
+                            <button class="btn btn-primary join-item">重新开始</button>
+                            <button class="btn btn-error join-item">悔棋</button>
+                            <button class="btn btn-ghost join-item" id="aiButton" onclick="toggleAI()">开启AI</button>
+                            <div class="join-item dropdown">
+                                <div tabindex="0" role="button" class="btn">难度</div>
+                                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                    <li><button class="difficulty-btn" data-difficulty="easy" onclick="setAIDifficulty('easy')">简单</button></li>
+                                    <li><button class="difficulty-btn btn-active" data-difficulty="medium" onclick="setAIDifficulty('medium')">中等</button></li>
+                                    <li><button class="difficulty-btn" data-difficulty="hard" onclick="setAIDifficulty('hard')">困难</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 棋盘容器优化 -->
+                    <div class="board w-full max-w-[min(90vw,600px)] mx-auto" id="board">
+                        <!-- 棋盘格子将通过 JavaScript 动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer footer-center p-6 mt-8">
+            <div class="grid grid-flow-col gap-4">
+                <a href="/" class="link link-hover link-primary">返回首页</a>
+                <span class="divider divider-horizontal"></span>
+                <a href="https://github.com/YuleBest/lh520" class="link link-hover link-primary">GitHub</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/theme.js"></script>
+    <script src="ai.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

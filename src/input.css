@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 通用输入框样式 */
+.input {
+    border: 2px solid var(--fallback-b3,oklch(var(--b3)/1));
+    background-color: var(--fallback-b1,oklch(var(--b1)/1));
+    transition: all 0.2s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--fallback-p,oklch(var(--p)/1));
+    box-shadow: 0 0 0 1px var(--fallback-p,oklch(var(--p)/0.1));
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-group .input {
+    flex: 1;
+}
+
+.input-group .btn {
+    flex-shrink: 0;
+}
+
+/* 文本域样式 */
+.textarea {
+    border: 2px solid var(--fallback-b3,oklch(var(--b3)/1));
+    background-color: var(--fallback-b1,oklch(var(--b1)/1));
+    transition: all 0.2s ease;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--fallback-p,oklch(var(--p)/1));
+    box-shadow: 0 0 0 1px var(--fallback-p,oklch(var(--p)/0.1));
+}
+
+/* 文件输入框样式 */
+.file-input {
+    border: 2px solid var(--fallback-b3,oklch(var(--b3)/1));
+    background-color: var(--fallback-b1,oklch(var(--b1)/1));
+}
+
+.file-input:focus {
+    outline: none;
+    border-color: var(--fallback-p,oklch(var(--p)/1));
+}
+
+/* 选择框样式 */
+.select {
+    border: 2px solid var(--fallback-b3,oklch(var(--b3)/1));
+    background-color: var(--fallback-b1,oklch(var(--b1)/1));
+    transition: all 0.2s ease;
+}
+
+.select:focus {
+    outline: none;
+    border-color: var(--fallback-p,oklch(var(--p)/1));
+    box-shadow: 0 0 0 1px var(--fallback-p,oklch(var(--p)/0.1));
+}
+
+/* 输入组合样式优化 */
+.join .input:not(:first-child),
+.join .select:not(:first-child),
+.join .btn:not(:first-child) {
+    margin-left: -2px;
+}
+
+.join .input:focus,
+.join .select:focus {
+    z-index: 1;
+}
+
+/* 输入框占位符样式 */
+.input::placeholder,
+.textarea::placeholder {
+    color: var(--fallback-bc,oklch(var(--bc)/0.5));
+}
+
+/* 禁用状态样式 */
+.input:disabled,
+.textarea:disabled,
+.select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

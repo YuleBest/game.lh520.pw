@@ -1,0 +1,179 @@
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 1px;
+    background-color: var(--fallback-b3,oklch(var(--b3)/1));
+    padding: 1px;
+    border-radius: 8px;
+    aspect-ratio: 1;
+    max-width: min(90vw, 600px);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background-color: var(--fallback-b1,oklch(var(--b1)/1));
+    border-radius: 2px;
+    transition: all 0.15s ease-out;
+}
+
+.cell.snake {
+    background-color: var(--fallback-p,oklch(var(--p)/1));
+    border-radius: 4px;
+    transform: scale(0.9);
+    transition: all 0.15s ease-out;
+}
+
+.cell.snake-head {
+    background-color: var(--fallback-s,oklch(var(--s)/1));
+    transform: scale(0.95);
+    animation: headPulse 2s ease-in-out infinite;
+}
+
+.cell.food {
+    background-color: var(--fallback-su,oklch(var(--su)/1));
+    border-radius: 50%;
+    animation: foodPulse 2s ease-in-out infinite;
+    transition: all 0.15s ease-out;
+}
+
+.cell.power-up {
+    border-radius: 50%;
+    animation: powerUpFloat 2s ease-in-out infinite;
+    transition: all 0.15s ease-out;
+}
+
+.cell.power-up.speed {
+    background-color: var(--fallback-wa,oklch(var(--wa)/1));
+}
+
+.cell.power-up.shield {
+    background-color: var(--fallback-in,oklch(var(--in)/1));
+}
+
+.cell.power-up.score {
+    background-color: var(--fallback-ac,oklch(var(--ac)/1));
+}
+
+.shield-effect {
+    position: absolute;
+    inset: 0;
+    border: 4px solid var(--fallback-in,oklch(var(--in)/0.5));
+    border-radius: 8px;
+    animation: shieldPulse 1s infinite;
+    pointer-events: none;
+}
+
+.speed-boost {
+    animation: speedBoostBg 1s ease-in-out infinite;
+}
+
+.game-controls {
+    position: relative;
+    z-index: 10;
+}
+
+.game-controls button {
+    transition: transform 0.1s ease;
+}
+
+.game-controls button:active {
+    transform: scale(0.9);
+}
+
+@keyframes headPulse {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(0.98); }
+    100% { transform: scale(0.95); }
+}
+
+@keyframes foodPulse {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1); }
+    100% { transform: scale(0.9); }
+}
+
+@keyframes powerUpFloat {
+    0% { transform: translateY(0) scale(0.9); }
+    50% { transform: translateY(-2px) scale(1); }
+    100% { transform: translateY(0) scale(0.9); }
+}
+
+@keyframes shieldPulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.02); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+@keyframes speedBoostBg {
+    0% { background-color: var(--fallback-b3,oklch(var(--b3)/1)); }
+    50% { background-color: var(--fallback-wa,oklch(var(--wa)/0.1)); }
+    100% { background-color: var(--fallback-b3,oklch(var(--b3)/1)); }
+}
+
+@media (max-width: 640px) {
+    .game-board {
+        max-width: min(90vw, 400px);
+    }
+
+    .game-controls {
+        margin-top: 2rem;
+    }
+
+    .game-controls button {
+        font-size: 1.5rem;
+        padding: 1rem;
+    }
+}
+
+.stats {
+    transition: all 0.3s ease;
+}
+
+.stat-value {
+    animation: valueChange 0.3s ease;
+}
+
+@keyframes valueChange {
+    0% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.collapse-title {
+    transition: background-color 0.3s ease;
+}
+
+.collapse-content {
+    transition: all 0.3s ease;
+}
+
+.paused .game-board::after {
+    content: "已暂停";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* 添加按钮动画样式 */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn[onclick="startGame()"] {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.btn[onclick="startGame()"][style*="display: none"] {
+    opacity: 0;
+    transform: scale(0.8);
+} 

@@ -1,0 +1,250 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+body {
+    background-color: #2c2c2c;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* 终端窗口样式 */
+.terminal {
+    width: 100%;
+    max-width: 900px;
+    height: 600px;
+    background-color: #300a24;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 终端标题栏 */
+.terminal-header {
+    background: linear-gradient(to bottom, #4f4f4f, #3c3c3c);
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    position: relative;
+}
+
+/* 窗口按钮 */
+.buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.close {
+    background-color: #ff5f56;
+}
+
+.minimize {
+    background-color: #ffbd2e;
+}
+
+.maximize {
+    background-color: #27c93f;
+}
+
+.button:hover {
+    filter: brightness(0.9);
+}
+
+/* 标题 */
+.title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #b9b9b9;
+    font-size: 14px;
+}
+
+/* 终端内容区域 */
+.terminal-content {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #ffffff;
+}
+
+/* 滚动条样式 */
+.terminal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+.terminal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 欢迎消息 */
+.welcome-message {
+    color: #00ff00;
+    margin-bottom: 10px;
+    white-space: pre-line;
+}
+
+/* 命令行 */
+.command-line {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.prompt {
+    color: #00ff00;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+/* 命令输入框 */
+.command-input {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: inherit;
+    font-family: inherit;
+    flex: 1;
+    outline: none;
+    caret-color: #ffffff;
+}
+
+/* 命令输出 */
+.output {
+    color: #b9b9b9;
+    margin: 5px 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 错误消息 */
+.error {
+    color: #ff5f56;
+}
+
+/* 成功消息 */
+.success {
+    color: #27c93f;
+}
+
+/* 动画效果 */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background-color: #ffffff;
+    margin-left: 2px;
+    animation: blink 1s infinite;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .terminal {
+        height: 80vh;
+    }
+
+    .terminal-content {
+        font-size: 12px;
+    }
+
+    .button {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+/* 命令提示和高亮 */
+.highlight {
+    color: #ffbd2e;
+}
+
+.command-suggestion {
+    color: #666;
+    margin-left: 5px;
+}
+
+/* 文件系统视觉效果 */
+.directory {
+    color: #4e98ff;
+}
+
+.file {
+    color: #ffffff;
+}
+
+.executable {
+    color: #27c93f;
+}
+
+/* 终端动画效果 */
+.terminal {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 打字机效果 */
+.typing {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 3s steps(60, end);
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+/* 在现有的动画部分添加 fadeOut 动画 */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}

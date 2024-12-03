@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟Linux终端 - 六花我爱你</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="buttons">
+                <div class="button close"></div>
+                <div class="button minimize"></div>
+                <div class="button maximize"></div>
+            </div>
+            <div class="title">终端</div>
+        </div>
+        <div class="terminal-content" id="terminal-content">
+            <div class="welcome-message">
+                Welcome to Virtual Linux Terminal
+                Type 'help' to see available commands
+                Type 'back' to back home page.
+                Warning: 这是一个虚拟的Linux终端，执行结果与真实系统环境结果不一定一致，仅供娱乐，您的任何使用数据不会被上传，任何命令不影响真实系统。
+            </div>
+            <div class="command-line">
+                <span class="prompt">guest@linux:~$</span>
+                <input type="text" class="command-input" id="command-input" autofocus>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

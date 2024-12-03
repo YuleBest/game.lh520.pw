@@ -1,0 +1,116 @@
+/* 留言板样式 */
+.message-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--fallback-p,oklch(var(--p)/0.5)) transparent;
+}
+
+.message-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.message-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.message-list::-webkit-scrollbar-thumb {
+    background-color: var(--fallback-p,oklch(var(--p)/0.5));
+    border-radius: 3px;
+}
+
+/* 聊天气泡样式 */
+.chat {
+    animation: messageAppear 0.3s ease;
+}
+
+.chat-bubble {
+    position: relative;
+    max-width: 80%;
+    word-break: break-word;
+}
+
+.chat-header {
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* 社区指南样式 */
+.guide-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.guide-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0.5rem;
+    color: var(--fallback-p,oklch(var(--p)/1));
+}
+
+/* 联系方式图标样式 */
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.contact-item:hover {
+    background-color: var(--fallback-b2,oklch(var(--b2)/1));
+}
+
+.contact-item svg {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* 友情链接样式 */
+.friend-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.friend-link {
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.friend-link:hover {
+    transform: translateY(-2px);
+    background-color: var(--fallback-b2,oklch(var(--b2)/1));
+}
+
+/* 动画效果 */
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .chat-bubble {
+        max-width: 90%;
+    }
+
+    .friend-links {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contact-item {
+        padding: 0.75rem;
+    }
+} 
