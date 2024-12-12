@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>扫雷</title>
+    <link href="/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-base-200">
+    <div class="navbar bg-base-100">
+        <div class="navbar-start">
+            <a href="/" class="btn btn-ghost normal-case text-xl">返回首页</a>
+        </div>
+        <div class="navbar-center flex gap-2 items-center">
+            <span class="text-2xl font-bold">扫雷</span>
+            <button class="btn btn-circle btn-ghost btn-xs text-error" onclick="toggleCheat()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </path>
+                </svg>
+            </button>
+        </div>
+        <div class="navbar-end">
+            <button class="btn btn-ghost" onclick="toggleTheme()">
+                <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="card bg-base-100 shadow-xl max-w-2xl mx-auto">
+            <div class="card-body">
+                <div class="flex flex-wrap justify-center gap-4 mb-4">
+                    <div class="stats shadow">
+                        <div class="stat">
+                            <div class="stat-title">剩余地雷</div>
+                            <div class="stat-value" id="mines-count">10</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">用时</div>
+                            <div class="stat-value" id="timer">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 mb-4">
+                    <button class="btn btn-primary" onclick="startGame('easy')">简单</button>
+                    <button class="btn btn-primary" onclick="startGame('medium')">中等</button>
+                    <button class="btn btn-primary" onclick="startGame('hard')">困难</button>
+                    <button class="btn btn-primary" onclick="showCustomDialog()">自定义</button>
+                </div>
+
+                <div class="divider">游戏说明</div>
+                <div class="text-sm opacity-70 mb-4">
+                    <p>• 左键点击格子揭示内容</p>
+                    <p>• 右键点击格子标记地雷</p>
+                    <p>• 数字表示周围8个格子中的地雷数量</p>
+                    <p>• 标记出所有地雷并揭示所有安全格子即可获胜</p>
+                </div>
+
+                <div id="cheatPanel" class="hidden">
+                    <div class="divider">作弊功能</div>
+                    <div class="flex justify-center gap-4 mb-4">
+                        <button class="btn btn-warning btn-sm" onclick="markOneMine()">标记一个地雷</button>
+                        <button class="btn btn-error btn-sm" onclick="markAllMines()">标记所有地雷</button>
+                    </div>
+                </div>
+
+                <div id="game-board" class="game-board"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义难度对话框 -->
+    <div id="dialogOverlay" class="dialog-overlay" onclick="hideCustomDialog()"></div>
+    <div id="customDialog" class="custom-dialog">
+        <h3 class="font-bold text-lg mb-4">自定义难度</h3>
+        <div class="form-control w-full max-w-xs gap-4">
+            <div>
+                <label class="label">
+                    <span class="label-text">宽度 (5-50)</span>
+                </label>
+                <input type="number" id="customWidth" class="input input-bordered w-full" value="16" min="5" max="50">
+            </div>
+            <div>
+                <label class="label">
+                    <span class="label-text">高度 (5-50)</span>
+                </label>
+                <input type="number" id="customHeight" class="input input-bordered w-full" value="16" min="5" max="50">
+            </div>
+            <div>
+                <label class="label">
+                    <span class="label-text">地雷数</span>
+                </label>
+                <input type="number" id="customMines" class="input input-bordered w-full" value="40" min="1">
+            </div>
+            <div class="modal-action">
+                <button class="btn btn-primary" onclick="startGame('custom')">开始游戏</button>
+                <button class="btn" onclick="hideCustomDialog()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

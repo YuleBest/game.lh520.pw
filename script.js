@@ -1,53 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // 搜索功能
-    const searchInput = document.getElementById('navSearchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', handleSearch);
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                this.value = '';
-                handleSearch();
-            }
-        });
-    }
-});
-
-// 搜索处理函数
-function handleSearch() {
-    const searchInput = document.getElementById('navSearchInput');
-    const searchText = searchInput.value.toLowerCase().trim();
-    const cards = document.querySelectorAll('.card');
-
-    cards.forEach(card => {
-        const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
-        const description = card.querySelector('.text-base-content\\/70')?.textContent.toLowerCase() || '';
-        
-        const isMatch = title.includes(searchText) || description.includes(searchText);
-        
-        if (isMatch) {
-            card.style.display = '';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-            card.classList.add('card-matched');
-        } else {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.classList.remove('card-matched');
-            setTimeout(() => {
-                if (!searchInput.value.toLowerCase().trim().includes(searchText)) {
-                    card.style.display = 'none';
-                }
-            }, 300);
-        }
-    });
-
-    // 如果搜索框为空，移除所有匹配标记
-    if (!searchText) {
-        cards.forEach(card => {
-            card.classList.remove('card-matched');
-        });
-    }
-}
 
 // 随机跳转功能
 function randomJump() {
@@ -57,7 +7,10 @@ function randomJump() {
         '/puzzle/',
         '/photo/',
         '/gobang/',
-        '/linux/'
+        '/linux/',
+        '/minesweeper/',
+        '/draw/',
+        '/img2base64/'
     ];
     const randomIndex = Math.floor(Math.random() * links.length);
     window.location.href = links[randomIndex];

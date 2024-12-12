@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机抽取工具</title>
+    <script src="/tailwindcss.js"></script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex flex-col min-h-screen">
+        <div class="flex-1">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <!-- 返回按钮 -->
+                <div class="mb-4 relative z-10">
+                    <a href="/" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        返回首页
+                    </a>
+                </div>
+
+                <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
+                    随机抽取工具
+                </h1>
+
+                <!-- 内容区域 -->
+                <div id="numberDraw" class="block">
+                    <!-- 数字抽取 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                            随机数字抽取
+                        </h2>
+                        
+                        <!-- 结果显示 -->
+                        <div id="numberResult" class="mb-6 overflow-hidden">
+                            <!-- 初始提示 -->
+                            <div class="text-center text-gray-500 dark:text-gray-400 py-8" id="numberInitialTip">
+                                <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                <p>点击下方"开始抽取"按钮开始</p>
+                            </div>
+                            <!-- 结果卡片容器 -->
+                            <div id="numberResultCards" class="hidden">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4"></div>
+                                <!-- 展开/折叠按钮 -->
+                                <button id="numberExpandBtn" class="hidden w-full py-2 px-4 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-300 text-center hover:-translate-y-0.5">
+                                    展开更多结果
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- 基本设置 -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">最小值</label>
+                                    <input type="number" id="minNum" class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">最大值</label>
+                                    <input type="number" id="maxNum" class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                </div>
+                            </div>
+
+                            <!-- 高级设置 -->
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-4">
+                                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">小数位数</label>
+                                    <select id="decimal" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        <option value="0">整数</option>
+                                        <option value="1">1位小数</option>
+                                        <option value="2">2位小数</option>
+                                        <option value="3">3位小数</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex items-center gap-4">
+                                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">数字类型</label>
+                                    <select id="numberType" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        <option value="all">所有数字</option>
+                                        <option value="odd">仅单数</option>
+                                        <option value="even">仅双数</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex items-center gap-4">
+                                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">抽取次数</label>
+                                    <input type="number" id="drawTimes" value="1" min="1" class="w-24 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                </div>
+                            </div>
+
+                            <!-- 权重设置 -->
+                            <div id="weightSettings" class="hidden space-y-4">
+                                <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
+                                    <p class="text-sm text-blue-700 dark:text-blue-300 whitespace-pre-line">
+                                        <svg class="inline-block w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        权重说明：数值越大，被抽中的概率越高。例如：权重为2的数字比权重为1的数字更容易被抽中。
+                                    </p>
+                                </div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">特定数字权重</label>
+                                <div id="weightList" class="space-y-2"></div>
+                                <button id="addWeight" class="mt-2 px-3 py-1 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 hover:-translate-y-0.5">
+                                    添加权重
+                                </button>
+                            </div>
+
+                            <!-- 按钮和结果 -->
+                            <div class="flex justify-between items-center">
+                                <button id="toggleWeight" class="px-4 py-2 text-blue-600 dark:text-blue-400 hover:underline">
+                                    设置权重
+                                </button>
+                                <button id="drawNumber" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 active:shadow-md">
+                                    开始抽取
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="customDraw" class="hidden">
+                    <!-- 自定义项抽取 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                            自定义项抽取
+                        </h2>
+
+                        <!-- 结果显示 -->
+                        <div id="customResult" class="mb-6 overflow-hidden">
+                            <!-- 初始提示 -->
+                            <div class="text-center text-gray-500 dark:text-gray-400 py-8" id="customInitialTip">
+                                <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                <p>请输入待抽取项目后点击"开始抽取"</p>
+                            </div>
+                            <!-- 结果卡片容器 -->
+                            <div id="customResultCards" class="hidden">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4"></div>
+                                <!-- 展开/折叠按钮 -->
+                                <button id="customExpandBtn" class="hidden w-full py-2 px-4 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-300 text-center hover:-translate-y-0.5">
+                                    展开更多结果
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- 输入区域 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">输入项目（每行一个）</label>
+                                <textarea 
+                                    id="customItems" 
+                                    rows="5" 
+                                    class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white font-mono resize-y"
+                                    placeholder="项目1&#10;项目2&#10;项目3"
+                                ></textarea>
+                            </div>
+
+                            <!-- 抽取次数 -->
+                            <div class="flex items-center gap-4">
+                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">抽取次数</label>
+                                <input type="number" id="customDrawTimes" value="1" min="1" class="w-24 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            </div>
+
+                            <!-- 自定义权重设置 -->
+                            <div id="customWeightSettings" class="hidden space-y-4">
+                                <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
+                                    <p class="text-sm text-blue-700 dark:text-blue-300 whitespace-pre-line">
+                                        <svg class="inline-block w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        权重说明：数值越大，该项目被抽中的概率越高。默认权重为1。
+                                    </p>
+                                </div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">项目权重</label>
+                                <div id="customWeightList" class="space-y-2 max-h-60 overflow-y-auto pr-2"></div>
+                            </div>
+
+                            <!-- 按钮和结果 -->
+                            <div class="flex justify-between items-center">
+                                <button id="toggleCustomWeight" class="px-4 py-2 text-blue-600 dark:text-blue-400 hover:underline">
+                                    设置权重
+                                </button>
+                                <button id="drawCustom" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 active:shadow-md">
+                                    开始抽取
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航栏 -->
+        <div class="bg-white dark:bg-gray-800 shadow-lg">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-center">
+                    <button 
+                        id="tabNumber" 
+                        class="flex-1 px-6 py-4 text-center text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 font-medium transition-all duration-300 hover:-translate-y-0.5"
+                        onclick="switchTab('number')"
+                    >
+                        <div class="flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            数字抽取
+                        </div>
+                    </button>
+                    <button 
+                        id="tabCustom" 
+                        class="flex-1 px-6 py-4 text-center text-gray-500 dark:text-gray-400 border-b-2 border-transparent hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+                        onclick="switchTab('custom')"
+                    >
+                        <div class="flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                            自定义抽取
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            // 更新内容显示
+            document.getElementById('numberDraw').classList.toggle('hidden', tab !== 'number');
+            document.getElementById('customDraw').classList.toggle('hidden', tab !== 'custom');
+            
+            // 更新标签样式
+            document.getElementById('tabNumber').className = `flex-1 px-6 py-4 text-center font-medium ${
+                tab === 'number' 
+                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
+                : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent hover:text-blue-600 dark:hover:text-blue-400'
+            }`;
+            
+            document.getElementById('tabCustom').className = `flex-1 px-6 py-4 text-center font-medium ${
+                tab === 'custom' 
+                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
+                : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent hover:text-blue-600 dark:hover:text-blue-400'
+            }`;
+        }
+    </script>
+    <script src="draw.js"></script>
+</body>
+</html>

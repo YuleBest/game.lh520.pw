@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>搜索结果 - 六花我爱你</title>
+    <link href="/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="/full.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        .card {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-base-200">
+    <div class="navbar bg-base-100">
+        <div class="navbar-start">
+            <a href="/" class="btn btn-ghost normal-case text-xl">返回首页</a>
+        </div>
+        <div class="navbar-center">
+            <div class="form-control">
+                <div class="relative w-full max-w-xs">
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="搜索本站玩具" 
+                           class="input input-bordered w-full pr-10" />
+                    <button onclick="handleSearchClick()" class="absolute right-0 inset-y-0 px-3 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <button class="btn btn-ghost" onclick="toggleTheme()">
+                <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div id="searchStats" class="text-center mb-8">
+            <h2 class="text-2xl font-bold mb-2">搜索结果</h2>
+            <p class="text-base-content/70">找到 <span id="resultCount">0</span> 个结果</p>
+        </div>
+
+        <div id="noResults" class="hidden text-center py-12">
+            <div class="max-w-md mx-auto">
+                <h3 class="text-xl font-bold mb-4">未找到相关结果</h3>
+                <p class="text-base-content/70 mb-6">试试其他关键词，或者返回首页查看所有功能</p>
+                <a href="/" class="btn btn-primary">返回首页</a>
+            </div>
+        </div>
+
+        <div id="searchResults" class="cards-container">
+            <!-- 搜索结果将在这里动态显示 -->
+        </div>
+    </div>
+
+    <script>
+        // 所有功能卡片的数据
+        const cards = [
+            {
+                title: "扫雷",
+                description: "经典扫雷游戏，支持多种难度和自定义设置",
+                date: "2024-12-12",
+                link: "/minesweeper/"
+            },
+            {
+                title: "随机抽取工具",
+                description: "随机抽取工具，支持自定义权重",
+                date: "2024-12-15",
+                link: "/draw/"
+            },
+            {
+                title: "二维码生成器",
+                description: "快速生成任意文本或链接的二维码，支持自定义样式和大小",
+                date: "2024-11-28",
+                link: "/QR/"
+            },
+            {
+                title: "贪吃蛇",
+                description: "经典的贪吃蛇游戏，支持键盘控制，有计分系统",
+                date: "2024-11-29",
+                link: "/snake/"
+            },
+            {
+                title: "拼图游戏",
+                description: "趣味拼图游戏，可选择难度，支持自定义图片",
+                date: "2024-11-29",
+                link: "/puzzle/"
+            },
+            {
+                title: "芙图",
+                description: "上传图片，获取图片主要颜色及其占比，还可以一键分享哦",
+                date: "2024-11-30",
+                link: "/photo/"
+            },
+            {
+                title: "五子棋",
+                description: "经典五子棋游戏，支持人机对战和双人对战模式",
+                date: "2024-12-01",
+                link: "/gobang/"
+            },
+            {
+                title: "虚拟Linux终端",
+                description: "在浏览器中体验Linux终端，支持命令行操作",
+                date: "2024-12-02",
+                link: "/linux/"
+            },
+            {
+                title: "Base64图片转换器",
+                description: "快速将图片转换为Base64编码，或将Base64编码还原为图片",
+                date: "2024-12-10",
+                link: "/img2base64/"
+            }
+        ];
+
+        // 获取URL参数
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // 创建卡片HTML
+        function createCardHTML(card) {
+            return `
+                <div class="card bg-base-100 animate-fade-in" style="animation-delay: ${Math.random() * 0.3}s">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">${card.title}</h2>
+                        <p class="text-base-content/70">${card.description}</p>
+                        <div class="card-actions justify-between items-center mt-4">
+                            <div class="badge badge-outline">${card.date}</div>
+                            <a href="${card.link}" class="btn btn-primary">开始使用</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 执行搜索
+        function performSearch(query) {
+            query = query.toLowerCase().trim();
+            const results = cards.filter(card => 
+                card.title.toLowerCase().includes(query) ||
+                card.description.toLowerCase().includes(query) ||
+                card.date.toLowerCase().includes(query)
+            );
+
+            const resultsContainer = document.getElementById('searchResults');
+            const noResults = document.getElementById('noResults');
+            document.getElementById('resultCount').textContent = results.length;
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '';
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                resultsContainer.innerHTML = results.map(createCardHTML).join('');
+            }
+        }
+
+        // 搜索框事件监听
+        const searchInput = document.getElementById('searchInput');
+        const query = getQueryParam('q') || '';
+        searchInput.value = query;
+        performSearch(query);
+
+        // 处理搜索按钮点击
+        function handleSearchClick() {
+            const query = searchInput.value.trim();
+            performSearch(query);
+            // 更新URL
+            const url = new URL(window.location);
+            url.searchParams.set('q', query);
+            window.history.pushState({}, '', url);
+        }
+
+        // 处理回车键
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSearchClick();
+            }
+        });
+
+        // 实时搜索（可选，如果想保留实时搜索功能）
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value;
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+                // 更新URL
+                const url = new URL(window.location);
+                url.searchParams.set('q', query);
+                window.history.pushState({}, '', url);
+            }, 300);
+        });
+
+        // 切换主题
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+        }
+    </script>
+</body>
+</html> 
